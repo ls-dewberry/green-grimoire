@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>∴ The Green Grimoire ∴</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1a14;--parchment:#f4efe3;--parchment-mid:#ede5d0;--parchment-dark:#e2d9c0;
+  --moss:#374528;--moss-mid:#4e6338;--moss-light:#6a8a4a;
+  --bone:#c4b99a;--rust:#7a3a28;--gold:#8a7030;--gold-light:#b09448;
+  --fog:#7a7468;--shadow:rgba(26,26,14,.15);--elderberry:#2d1f3d;
+  --cream:#faf7f0;
+}
+html,body{height:100%;font-family:'Crimson Pro',Georgia,serif;background:var(--parchment);color:var(--ink);font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* ── NAV ── */
+.nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bone);background:var(--parchment-dark);position:sticky;top:0;z-index:100}
+.nav-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--moss);padding:.75rem 1.25rem;letter-spacing:.04em;border-right:1px solid var(--bone);white-space:nowrap;cursor:pointer}
+.nav-title:hover{color:var(--moss-light)}
+.nav-tabs{display:flex;flex:1}
+.nav-tab{flex:1;padding:.75rem .5rem;text-align:center;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--fog);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;border-right:1px solid var(--bone)}
+.nav-tab:hover{color:var(--moss)}
+.nav-tab.active{color:var(--moss);border-bottom-color:var(--moss);font-weight:600;background:var(--parchment)}
+/* ── HOME ── */
+.home-wrap{display:flex;flex-direction:column;align-items:center;background:#1a150e;min-height:calc(100vh - 48px);padding:1.5rem 1rem 3rem}
+.home-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;color:#c8b888;letter-spacing:.06em;text-align:center;margin-bottom:.25rem;font-style:italic}
+.home-sub{font-size:14px;color:#6a5a3a;font-style:italic;text-align:center;margin-bottom:1.5rem;letter-spacing:.04em}
+.home-scene{position:relative;width:100%;max-width:820px}
+.home-scene svg{display:block;width:100%;height:auto;border-radius:8px}
+.hotspot-label{position:absolute;background:rgba(20,14,8,.75);color:#c8b888;border:1px solid #5a4a28;border-radius:4px;padding:4px 10px;font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;pointer-events:none;opacity:0;transition:opacity .2s;white-space:nowrap}
+/* ── PLANT IMAGE UPLOAD ── */
+.tile-upload-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;cursor:pointer;border-radius:4px 4px 0 0}
+.tile-img-wrap:hover .tile-upload-overlay{opacity:1}
+.tile-upload-overlay span{color:white;font-size:12px;font-family:'Crimson Pro',serif;background:rgba(0,0,0,.5);padding:3px 8px;border-radius:3px}
+/* ── DRAFT PLANT CARD ── */
+.draft-banner{background:#f0ede0;border:.5px solid #c8b070;border-radius:0 0 8px 8px;padding:.75rem 1.25rem;border-top:none}
+.draft-banner.pending{background:#faf6e8;border-color:#c8b070}
+.draft-banner.approved{background:#edf4e8;border-color:#8ab050}
+.draft-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;gap:.5rem}
+.draft-title{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--gold)}
+.draft-status{font-size:12px;font-style:italic;color:var(--fog)}
+.draft-body{font-size:14px;line-height:1.6;color:#2a2a20;margin-bottom:.75rem}
+.draft-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:.75rem}
+.draft-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn-approve{background:#5a7a38;color:var(--parchment);border:none;border-radius:4px;padding:6px 16px;font-family:'Crimson Pro',serif;font-size:14px;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:5px}
+.btn-approve:hover{background:#6a8a48}
+.btn-approve:disabled{background:var(--bone);cursor:default}
+.btn-edit-draft{background:none;border:1px solid var(--bone);border-radius:4px;padding:6px 12px;font-family:'Crimson Pro',serif;font-size:13px;color:var(--fog);cursor:pointer;transition:all .15s}
+.btn-edit-draft:hover{border-color:var(--moss-light);color:var(--moss)}
+.draft-loading{display:flex;align-items:center;gap:8px;color:var(--fog);font-style:italic;font-size:14px;padding:.25rem 0}
+.draft-spinner{width:14px;height:14px;border:2px solid var(--bone);border-top-color:var(--moss-light);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.approved-badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;background:#edf4e8;color:#5a7a38;border:.5px solid #8ab050;border-radius:10px;padding:2px 8px;font-family:'Crimson Pro',serif}
+.entry-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.companion-splash{position:fixed;inset:0;background:rgba(12,10,6,.92);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
+.companion-splash.open{display:flex}
+.splash-creature{font-size:88px;margin-bottom:1rem;animation:crbounce .9s ease-in-out infinite}
+@keyframes crbounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.splash-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:#c8b888;margin-bottom:.5rem;letter-spacing:.04em}
+.splash-body{font-size:16px;color:#8a7a58;font-style:italic;max-width:340px;line-height:1.7;margin-bottom:1.5rem}
+.splash-btn{background:var(--moss);color:var(--parchment);border:none;border-radius:4px;padding:10px 28px;font-family:'Cormorant Garamond',serif;font-size:17px;cursor:pointer;letter-spacing:.03em;transition:background .15s}
+.splash-btn:hover{background:var(--moss-mid)}
+
+/* ── SECTIONS ── */
+.section{display:none;min-height:calc(100vh - 48px)}
+.section.active{display:block}
+
+/* ══════════════════════════════════
+   LIBRARY
+══════════════════════════════════ */
+.library{padding:2rem 1.5rem}
+.library-header{margin-bottom:2rem;text-align:center}
+.library-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--moss);letter-spacing:.03em}
+.library-sub{font-size:14px;color:var(--fog);font-style:italic;margin-top:.25rem}
+
+.bookshelf-wrap{margin-bottom:2rem;background:#5a3e25;border-radius:6px;padding:18px 20px 0;box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08)}
+.bookshelf-wrap::before{content:'';display:block;height:10px;background:#3e2a14;border-radius:3px 3px 0 0;margin:-18px -20px 12px;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.bookshelf{display:flex;flex-wrap:nowrap;gap:4px;align-items:flex-end;overflow-x:auto;padding-bottom:0;scrollbar-width:none}
+.bookshelf::-webkit-scrollbar{display:none}
+.shelf-floor{height:14px;background:#3e2a14;margin:0 -20px;border-top:3px solid #7a5535;box-shadow:0 4px 8px rgba(0,0,0,.4)}
+.book{cursor:pointer;transition:transform .2s;user-select:none;flex-shrink:0}
+.book:hover{transform:translateY(-8px)}
+.book-spine{width:52px;height:150px;border-radius:2px 4px 4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px 0 10px;box-shadow:inset -3px 0 6px rgba(0,0,0,.25),1px 0 0 rgba(255,255,255,.06);border-left:5px solid rgba(0,0,0,.2);position:relative;overflow:hidden}
+.book-spine::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,rgba(255,255,255,.07) 0%,transparent 60%)}
+.book-icon{font-size:18px;flex-shrink:0}
+.book-label{font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:600;color:rgba(255,255,255,.88);letter-spacing:.05em;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:90px;line-height:1;flex-shrink:0}
+.book-count{font-size:10px;color:rgba(255,255,255,.5);font-style:italic;writing-mode:vertical-rl;transform:rotate(180deg);flex-shrink:0}
+.book-trees .book-spine{background:linear-gradient(170deg,#4a5e30,#2e3d1a);border-left-color:#1e2a10}
+.book-medicinal .book-spine{background:linear-gradient(170deg,#4a2d5a,#2d1a3d);border-left-color:#1e1028}
+.book-edible .book-spine{background:linear-gradient(170deg,#5a3a1a,#3d2510);border-left-color:#281808}
+.book-wildflowers .book-spine{background:linear-gradient(170deg,#5a2d3a,#3d1a28);border-left-color:#281018}
+.book-shrubs .book-spine{background:linear-gradient(170deg,#2a4a4a,#1a3030);border-left-color:#102020}
+.book-caution .book-spine{background:linear-gradient(170deg,#6a3a1a,#4a2010);border-left-color:#301008}
+.book-all .book-spine{background:linear-gradient(170deg,#3a3a2a,#1a1a10);border-left-color:#101008}
+
+/* plant drawer */
+.plant-drawer{display:none;background:var(--cream);border:1px solid var(--bone);border-radius:8px;padding:1.5rem;margin-top:0}
+.plant-drawer.open{display:block}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;gap:1rem}
+.drawer-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--moss)}
+.drawer-search-wrap{position:relative;flex:1;max-width:280px}
+.drawer-search-wrap i{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--fog);font-size:14px}
+.drawer-search{width:100%;background:var(--parchment);border:1px solid var(--bone);border-radius:4px;padding:6px 10px 6px 30px;font-family:'Crimson Pro',serif;font-size:14px;color:var(--ink);outline:none}
+.drawer-search:focus{border-color:var(--moss-light)}
+.close-drawer{background:none;border:none;cursor:pointer;color:var(--fog);font-size:20px;padding:2px;transition:color .15s}
+.close-drawer:hover{color:var(--rust)}
+
+.plant-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.plant-tile{background:white;border:.5px solid var(--bone);border-radius:8px;overflow:hidden;cursor:pointer;transition:box-shadow .15s,transform .15s}
+.plant-tile:hover{box-shadow:0 3px 14px var(--shadow);transform:translateY(-2px)}
+.tile-img-wrap{height:120px;overflow:hidden;background:var(--parchment-mid);position:relative}
+.tile-img{width:100%;height:100%;object-fit:cover;transition:opacity .3s}
+.tile-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px}
+.tile-body{padding:.6rem .75rem .75rem}
+.tile-common{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--moss);line-height:1.2}
+.tile-latin{font-size:12px;font-style:italic;color:var(--fog);margin-top:1px}
+.tile-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:.4rem}
+.tile-tag{font-size:10.5px;padding:1px 7px;border-radius:10px}
+.tile-tag-edible{background:#e8f0d8;color:#3a5a18}
+.tile-tag-medicinal{background:#e8ddf0;color:#4a2d6a}
+.tile-tag-toxic{background:#f0ddd8;color:#6a2a1a}
+.tile-tag-tree{background:#e8e4d8;color:#4a3a1a}
+.tile-tag-shrub{background:#dde8f0;color:#1a3a5a}
+.tile-tag-wildflower{background:#f0e8ee;color:#5a1a3a}
+.tile-tag-fern{background:#dff0e4;color:#1a4a30}
+.tile-tag-vine{background:#f0ede0;color:#4a3a1a}
+
+/* plant detail modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,14,.5);z-index:200;align-items:flex-start;justify-content:center;padding:1.5rem;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:var(--cream);border-radius:10px;max-width:680px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25);overflow:hidden;margin:auto}
+.modal-img{width:100%;height:240px;object-fit:cover;display:block}
+.modal-img-placeholder{width:100%;height:180px;background:var(--parchment-mid);display:flex;align-items:center;justify-content:center;font-size:64px}
+.modal-body{padding:1.5rem}
+.modal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.modal-common{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--moss);line-height:1.1}
+.modal-latin{font-size:14px;font-style:italic;color:var(--fog);margin-top:3px}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--fog);font-size:22px;padding:2px;flex-shrink:0;transition:color .15s}
+.modal-close:hover{color:var(--rust)}
+.modal-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1rem}
+.modal-tag{font-size:12px;padding:2px 10px;border-radius:12px}
+.facts-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:1.25rem}
+.fact-box{background:var(--parchment);border:.5px solid var(--bone);border-radius:4px;padding:8px 12px}
+.fact-lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--fog);margin-bottom:2px}
+.fact-val{font-size:13.5px;color:var(--ink)}
+.sec-lbl{font-family:'Cormorant Garamond',serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:.35rem;font-weight:500}
+.sec-body{font-size:15px;line-height:1.65;color:#28281e;margin-bottom:1.1rem}
+.lore-box{background:var(--parchment-mid);border-left:2px solid var(--gold-light);padding:10px 14px;margin-bottom:1.1rem;font-style:italic;font-size:14.5px;color:#3a3226;border-radius:0 4px 4px 0}
+.caution-box{background:#fdf0ec;border:.5px solid #e0b0a0;border-radius:4px;padding:8px 12px;margin-bottom:1rem;font-size:13px;color:var(--rust);font-style:italic}
+.note-lbl{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--gold);margin-bottom:.35rem}
+.note-ta{width:100%;background:var(--parchment);border:1px solid var(--bone);border-radius:4px;padding:9px 11px;font-family:'Crimson Pro',serif;font-size:14.5px;color:var(--ink);resize:vertical;min-height:70px;outline:none;line-height:1.6}
+.note-ta:focus{border-color:var(--moss-light)}
+.note-ta::placeholder{color:var(--bone);font-style:italic}
+.note-row{display:flex;justify-content:flex-end;gap:8px;align-items:center;margin-top:.5rem}
+.saved-msg{font-size:12px;color:var(--moss-light);font-style:italic;opacity:0;transition:opacity .3s}
+.saved-msg.show{opacity:1}
+.btn-moss{background:var(--moss);color:var(--parchment);border:none;border-radius:4px;padding:6px 16px;font-family:'Crimson Pro',serif;font-size:14px;cursor:pointer;transition:background .15s}
+.btn-moss:hover{background:var(--moss-mid)}
+.photo-credit{font-size:11px;color:var(--fog);font-style:italic;text-align:right;margin-top:4px;margin-bottom:.75rem}
+
+/* ══════════════════════════════════
+   JOURNAL
+══════════════════════════════════ */
+.journal{padding:1.5rem;max-width:800px;margin:0 auto}
+.journal-header{margin-bottom:1.5rem;text-align:center}
+.journal-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--moss)}
+.journal-sub{font-size:14px;color:var(--fog);font-style:italic;margin-top:.25rem}
+
+.new-entry-card{background:white;border:.5px solid var(--bone);border-radius:8px;padding:1.25rem;margin-bottom:2rem}
+.ne-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--moss);margin-bottom:1rem;font-weight:600}
+.ne-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem}
+.ne-field{display:flex;flex-direction:column;gap:.3rem}
+.ne-field.full{grid-column:1/-1}
+.ne-lbl{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--gold)}
+.ne-input{background:var(--parchment);border:1px solid var(--bone);border-radius:4px;padding:7px 10px;font-family:'Crimson Pro',serif;font-size:14.5px;color:var(--ink);outline:none;transition:border-color .2s}
+.ne-input:focus{border-color:var(--moss-light)}
+.ne-input::placeholder{color:var(--bone);font-style:italic}
+textarea.ne-input{resize:vertical;min-height:70px;line-height:1.6}
+
+.image-upload-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem}
+.img-upload-btn{display:flex;align-items:center;gap:6px;background:var(--parchment-mid);border:1px dashed var(--bone);border-radius:6px;padding:8px 14px;cursor:pointer;font-family:'Crimson Pro',serif;font-size:14px;color:var(--fog);transition:border-color .15s}
+.img-upload-btn:hover{border-color:var(--moss-light);color:var(--moss)}
+.img-preview-wrap{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem}
+.img-thumb-wrap{position:relative;width:80px;height:80px}
+.img-thumb{width:80px;height:80px;object-fit:cover;border-radius:6px;border:.5px solid var(--bone)}
+.img-thumb-del{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--rust);border:none;color:white;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+
+.ne-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.btn-outline{background:none;border:1px solid var(--bone);border-radius:4px;padding:6px 14px;font-family:'Crimson Pro',serif;font-size:14px;color:var(--moss);cursor:pointer;transition:all .15s}
+.btn-outline:hover{border-color:var(--moss-light);background:var(--parchment-mid)}
+
+/* journal entries */
+.entries-list{}
+.entry-card{background:white;border:.5px solid var(--bone);border-radius:8px;margin-bottom:1rem;overflow:hidden}
+.entry-head{display:flex;gap:12px;padding:1rem 1.25rem;align-items:flex-start}
+.entry-imgs{display:flex;gap:6px;flex-shrink:0}
+.entry-img{width:70px;height:70px;object-fit:cover;border-radius:6px;border:.5px solid var(--bone);cursor:pointer}
+.entry-img-placeholder{width:70px;height:70px;border-radius:6px;background:var(--parchment-mid);display:flex;align-items:center;justify-content:center;font-size:28px;border:.5px solid var(--bone)}
+.entry-info{flex:1}
+.entry-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--moss)}
+.entry-meta{font-size:12.5px;color:var(--fog);font-style:italic;margin-top:2px}
+.entry-actions{display:flex;gap:4px}
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--fog);font-size:17px;padding:4px;border-radius:3px;transition:color .15s}
+.icon-btn:hover{color:var(--rust)}
+
+.entry-obs{padding:0 1.25rem 1rem;border-top:.5px solid var(--parchment-dark)}
+.obs-item{padding:.6rem 0;border-bottom:.5px solid var(--parchment-dark)}
+.obs-item:last-child{border-bottom:none}
+.obs-date{font-size:11.5px;color:var(--fog);font-style:italic;margin-bottom:.25rem}
+.obs-text{font-size:14.5px;color:#28281e;line-height:1.6}
+.obs-imgs{display:flex;gap:6px;flex-wrap:wrap;margin-top:.4rem}
+.obs-img{width:64px;height:64px;object-fit:cover;border-radius:5px;border:.5px solid var(--bone);cursor:pointer}
+
+.add-obs-row{padding:.75rem 1.25rem;border-top:.5px solid var(--parchment-dark);background:var(--parchment)}
+.add-obs-btn{background:none;border:none;font-family:'Crimson Pro',serif;font-size:13.5px;color:var(--moss-light);cursor:pointer;display:flex;align-items:center;gap:5px;padding:0;transition:color .15s}
+.add-obs-btn:hover{color:var(--moss)}
+.add-obs-form{padding:.75rem 1.25rem;border-top:.5px solid var(--parchment-dark);background:var(--parchment);display:none}
+.add-obs-form.open{display:block}
+
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;align-items:center;justify-content:center;cursor:pointer}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:90vh;border-radius:6px}
+
+/* ══════════════════════════════════
+   TRAIL
+══════════════════════════════════ */
+.trail-section{padding:1.5rem;max-width:700px;margin:0 auto}
+.trail-header{text-align:center;margin-bottom:1.5rem}
+.trail-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--moss)}
+.trail-sub{font-size:14px;color:var(--fog);font-style:italic;margin-top:.25rem}
+
+/* progress trail */
+.trail-viz{background:var(--parchment-mid);border-radius:10px;padding:1rem 1.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden;border:.5px solid var(--bone)}
+.trail-path{height:14px;background:var(--parchment-dark);border-radius:8px;position:relative;overflow:visible;margin:.5rem 0}
+.trail-fill{height:100%;background:linear-gradient(90deg,var(--moss-light),var(--moss));border-radius:8px;transition:width .5s ease;min-width:0}
+.trail-cat{position:absolute;top:50%;transform:translateY(-60%);font-size:22px;transition:left .5s ease;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.2))}
+.trail-markers{display:flex;justify-content:space-between;margin-top:.25rem}
+.trail-marker{font-size:10.5px;color:var(--fog);font-style:italic}
+.trail-score-row{display:flex;justify-content:space-between;align-items:center}
+.trail-score{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--moss);font-weight:600}
+.trail-pts{font-size:13px;color:var(--fog);font-style:italic}
+
+/* game chooser */
+.game-chooser{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.game-tile{background:white;border:.5px solid var(--bone);border-radius:8px;padding:1.25rem 1rem;text-align:center;cursor:pointer;transition:all .15s;border-bottom:3px solid transparent}
+.game-tile:hover{box-shadow:0 3px 12px var(--shadow);transform:translateY(-2px)}
+.game-tile.active{border-bottom-color:var(--moss);background:var(--parchment)}
+.game-icon{font-size:28px;margin-bottom:.5rem;display:block}
+.game-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--moss)}
+.game-desc{font-size:12px;color:var(--fog);margin-top:.25rem;font-style:italic}
+
+/* game area */
+.game-area{background:white;border:.5px solid var(--bone);border-radius:8px;padding:1.5rem;min-height:340px}
+.game-prompt{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--moss);margin-bottom:1.25rem;text-align:center;font-style:italic}
+.game-img{width:100%;max-height:220px;object-fit:cover;border-radius:6px;margin-bottom:1rem;border:.5px solid var(--bone)}
+.game-options{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.game-opt{background:var(--parchment);border:1px solid var(--bone);border-radius:6px;padding:.75rem 1rem;cursor:pointer;font-family:'Crimson Pro',serif;font-size:15px;color:var(--ink);transition:all .15s;text-align:left;line-height:1.4}
+.game-opt:hover:not(:disabled){border-color:var(--moss-light);background:var(--parchment-mid)}
+.game-opt.correct{background:#e8f0d8;border-color:#8ab050;color:#2a4a10}
+.game-opt.wrong{background:#f0ddd8;border-color:#c08070;color:#5a2a1a}
+.game-opt:disabled{cursor:default}
+
+/* flashcard */
+.flashcard-wrap{perspective:800px;margin-bottom:1rem;cursor:pointer}
+.flashcard{width:100%;min-height:200px;position:relative;transform-style:preserve-3d;transition:transform .5s}
+.flashcard.flipped{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;border:1px solid var(--bone)}
+.fc-front{background:var(--parchment-mid)}
+.fc-back{background:white;transform:rotateY(180deg)}
+.fc-img{width:100%;max-height:160px;object-fit:cover;border-radius:6px;margin-bottom:.75rem}
+.fc-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--moss);text-align:center}
+.fc-latin{font-size:13px;font-style:italic;color:var(--fog);text-align:center;margin-top:.25rem}
+.fc-hint{font-size:13px;color:var(--fog);font-style:italic;margin-top:1rem}
+.fc-back-content{text-align:center}
+.fc-property{font-size:14.5px;color:#28281e;line-height:1.6;margin-top:.5rem}
+.fc-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.btn-sm{padding:6px 16px;border-radius:4px;font-family:'Crimson Pro',serif;font-size:14px;cursor:pointer;transition:all .15s;border:1px solid var(--bone)}
+.btn-sm-moss{background:var(--moss);color:var(--parchment);border-color:var(--moss)}
+.btn-sm-moss:hover{background:var(--moss-mid)}
+.btn-sm-ghost{background:none;color:var(--moss)}
+.btn-sm-ghost:hover{background:var(--parchment-mid)}
+
+/* tag game */
+.tag-game-plant{text-align:center;margin-bottom:1rem}
+.tag-game-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--moss)}
+.tag-game-img{width:100%;max-height:180px;object-fit:cover;border-radius:6px;margin:.75rem 0;border:.5px solid var(--bone)}
+.tag-grid{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1rem}
+.tag-chip{padding:6px 16px;border-radius:20px;border:1px solid var(--bone);background:var(--parchment);font-family:'Crimson Pro',serif;font-size:14px;color:var(--ink);cursor:pointer;transition:all .15s;user-select:none}
+.tag-chip:hover:not(.locked){border-color:var(--moss-light);background:var(--parchment-mid)}
+.tag-chip.selected{background:var(--moss);border-color:var(--moss);color:var(--parchment)}
+.tag-chip.correct-yes{background:#e8f0d8;border-color:#8ab050;color:#2a4a10}
+.tag-chip.correct-no{background:var(--parchment);border-color:var(--bone);color:var(--fog)}
+.tag-chip.wrong-yes{background:#f0ddd8;border-color:#c08070;color:#5a2a1a}
+.tag-chip.wrong-no{background:#f0ddd8;border-color:#c08070;color:#5a2a1a}
+.tag-chip.locked{cursor:default}
+.tag-feedback{text-align:center;font-size:15px;margin:.75rem 0;min-height:24px;color:var(--moss);font-style:italic}
+
+/* feedback flash */
+.pt-flash{position:fixed;top:60px;right:1rem;background:var(--moss);color:var(--parchment);padding:.4rem .9rem;border-radius:20px;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;opacity:0;transform:translateY(-8px);transition:opacity .3s,transform .3s;pointer-events:none;z-index:400}
+.pt-flash.show{opacity:1;transform:translateY(0)}
+
+/* empty states */
+.empty{text-align:center;padding:3rem 1rem;color:var(--fog);font-style:italic;font-size:16px}
+</style>
+</head>
+<body>
+
+<!-- companion splash -->
+<div class="companion-splash" id="companionSplash">
+  <div class="splash-creature" id="splashCreature">🐈‍⬛</div>
+  <div class="splash-title" id="splashTitle">The cat has reached the end of the trail!</div>
+  <div class="splash-body" id="splashBody">You've walked the path. The forest knows your name now.</div>
+  <button class="splash-btn" onclick="nextCompanion()">Begin again ›</button>
+</div>
+
+<!-- point flash -->
+<div class="pt-flash" id="ptFlash"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-title" onclick="showSection('home',null)">∴ Grimoire</div>
+  <div class="nav-tabs">
+    <div class="nav-tab" onclick="showSection('library',this)"><i class="ti ti-books"></i> Library</div>
+    <div class="nav-tab" onclick="showSection('journal',this)"><i class="ti ti-notebook"></i> Journal</div>
+    <div class="nav-tab" onclick="showSection('trail',this)"><i class="ti ti-trail"></i> The Trail</div>
+  </div>
+</nav>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()"><img id="lightboxImg" src="" alt=""></div>
+
+<!-- plant detail modal -->
+<div class="modal-overlay" id="plantModal" onclick="closeModal(event)">
+  <div class="modal" id="modalInner">
+    <div id="modalImgWrap"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ══ HOME ══ -->
+<div class="section active" id="section-home">
+<div class="home-wrap">
+  <div class="home-title">∴ The Green Grimoire ∴</div>
+  <div class="home-sub">a compendium of southeastern flora</div>
+  <div class="home-scene" id="homeScene">
+    <svg viewBox="0 0 820 520" xmlns="http://www.w3.org/2000/svg" role="img">
+      <title>A cozy library room. Click the bookshelf, journal, or window to navigate.</title>
+      <defs>
+        <pattern id="wp" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M20 0 L40 20 L20 40 L0 20 Z" fill="none" stroke="#3a2e1a" stroke-width=".8"/>
+        </pattern>
+        <linearGradient id="wallFade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a1208" stop-opacity="1"/>
+          <stop offset="35%" stop-color="#1a1208" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="cg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f0a020" stop-opacity=".2"/>
+          <stop offset="100%" stop-color="#f0a020" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- ── BRIGHT WARM INTERIOR BASE ── -->
+      <rect width="820" height="520" fill="#c8a870"/>
+      <!-- floor — warm honey boards -->
+      <rect x="0" y="388" width="820" height="132" fill="#a07840"/>
+      <rect x="0" y="386" width="820" height="6" fill="#8a6430"/>
+      <!-- floor boards -->
+      <line x1="0" y1="408" x2="820" y2="408" stroke="#886030" stroke-width="1.5" opacity=".5"/>
+      <line x1="0" y1="430" x2="820" y2="430" stroke="#886030" stroke-width="1.5" opacity=".5"/>
+      <line x1="0" y1="452" x2="820" y2="452" stroke="#886030" stroke-width="1.5" opacity=".5"/>
+      <line x1="0" y1="474" x2="820" y2="474" stroke="#886030" stroke-width="1.5" opacity=".5"/>
+      <line x1="120" y1="388" x2="70" y2="520" stroke="#886030" stroke-width="1" opacity=".4"/>
+      <line x1="300" y1="388" x2="255" y2="520" stroke="#886030" stroke-width="1" opacity=".4"/>
+      <line x1="480" y1="388" x2="445" y2="520" stroke="#886030" stroke-width="1" opacity=".4"/>
+      <line x1="660" y1="388" x2="635" y2="520" stroke="#886030" stroke-width="1" opacity=".4"/>
+      <!-- warm wallpaper -->
+      <rect width="820" height="388" fill="url(#wp)"/>
+      <!-- warm ambient light overlay -->
+      <rect width="820" height="388" fill="#d4a060" opacity=".18"/>
+      <!-- wainscoting -->
+      <rect x="0" y="318" width="820" height="72" fill="#8a6030" opacity=".7"/>
+      <rect x="0" y="316" width="820" height="5" fill="#a07840"/>
+      <rect x="0" y="386" width="820" height="4" fill="#c89050"/>
+
+      <!-- ── BOOKCASE (far left) ── -->
+      <rect x="8" y="28" width="200" height="364" rx="3" fill="#3a2810"/>
+      <rect x="4" y="24" width="208" height="14" rx="3" fill="#2a1c0a"/>
+      <rect x="8" y="28" width="200" height="112" fill="#2e1e0c"/>
+      <rect x="8" y="28" width="6" height="364" fill="#221608"/>
+      <rect x="202" y="28" width="6" height="364" fill="#221608"/>
+      <rect x="8" y="138" width="200" height="10" rx="1" fill="#4a3018"/>
+      <rect x="8" y="140" width="200" height="4" fill="#5a3e20"/>
+      <rect x="8" y="248" width="200" height="10" rx="1" fill="#4a3018"/>
+      <rect x="8" y="250" width="200" height="4" fill="#5a3e20"/>
+      <rect x="8" y="358" width="200" height="10" rx="1" fill="#4a3018"/>
+      <rect x="8" y="360" width="200" height="4" fill="#5a3e20"/>
+      <!-- shelf 1 books -->
+      <rect x="18" y="50" width="18" height="82" rx="2" fill="#4a5e30"/><rect x="18" y="50" width="4" height="82" fill="#3a4e22"/>
+      <rect x="38" y="44" width="22" height="88" rx="2" fill="#2d1a3d"/><rect x="38" y="44" width="4" height="88" fill="#1e1028"/>
+      <rect x="62" y="56" width="16" height="76" rx="2" fill="#5a3a1a"/><rect x="62" y="56" width="3" height="76" fill="#3d2510"/>
+      <rect x="80" y="48" width="20" height="84" rx="2" fill="#5a2d3a"/><rect x="80" y="48" width="4" height="84" fill="#3d1a28"/>
+      <rect x="102" y="52" width="18" height="80" rx="2" fill="#3a3a2a"/><rect x="102" y="52" width="3" height="80" fill="#2a2a1a"/>
+      <rect x="122" y="46" width="24" height="86" rx="2" fill="#2a4a4a"/><rect x="122" y="46" width="4" height="86" fill="#1a3030"/>
+      <rect x="148" y="54" width="16" height="78" rx="2" fill="#6a3a1a"/><rect x="148" y="54" width="3" height="78" fill="#4a2010"/>
+      <rect x="166" y="50" width="20" height="82" rx="2" fill="#1a3a3a"/><rect x="166" y="50" width="4" height="82" fill="#102828"/>
+      <rect x="188" y="44" width="14" height="88" rx="2" fill="#4a2d5a"/><rect x="188" y="44" width="3" height="88" fill="#2d1a3d"/>
+      <!-- shelf 2 books -->
+      <rect x="18" y="158" width="20" height="80" rx="2" fill="#3a2830"/><rect x="18" y="158" width="4" height="80" fill="#281820"/>
+      <rect x="40" y="152" width="16" height="86" rx="2" fill="#4a4020"/><rect x="40" y="152" width="3" height="86" fill="#2a2810"/>
+      <rect x="58" y="160" width="22" height="78" rx="2" fill="#2a3a4a"/><rect x="58" y="160" width="4" height="78" fill="#1a2030"/>
+      <rect x="82" y="154" width="18" height="84" rx="2" fill="#5a2820"/><rect x="82" y="154" width="3" height="84" fill="#381808"/>
+      <rect x="102" y="158" width="24" height="80" rx="2" fill="#283828"/><rect x="102" y="158" width="4" height="80" fill="#182418"/>
+      <rect x="128" y="150" width="18" height="90" rx="2" fill="#4a3848"/><rect x="128" y="150" width="3" height="90" fill="#2a2030"/>
+      <rect x="148" y="156" width="20" height="82" rx="2" fill="#384830"/><rect x="148" y="156" width="4" height="82" fill="#202e18"/>
+      <rect x="170" y="152" width="16" height="86" rx="2" fill="#504028"/><rect x="170" y="152" width="3" height="86" fill="#342810"/>
+      <rect x="188" y="158" width="16" height="80" rx="2" fill="#203040"/><rect x="188" y="158" width="3" height="80" fill="#101e28"/>
+      <!-- shelf 3 books -->
+      <rect x="18" y="266" width="22" height="82" rx="2" fill="#3a4828"/><rect x="18" y="266" width="4" height="82" fill="#242e18"/>
+      <rect x="42" y="260" width="18" height="88" rx="2" fill="#4a1830"/><rect x="42" y="260" width="3" height="88" fill="#2a0820"/>
+      <rect x="62" y="268" width="20" height="80" rx="2" fill="#284040"/><rect x="62" y="268" width="4" height="80" fill="#182828"/>
+      <rect x="84" y="262" width="24" height="86" rx="2" fill="#503828"/><rect x="84" y="262" width="4" height="86" fill="#342010"/>
+      <rect x="110" y="266" width="16" height="82" rx="2" fill="#1a3848"/><rect x="110" y="266" width="3" height="82" fill="#0a2030"/>
+      <rect x="128" y="258" width="22" height="90" rx="2" fill="#484028"/><rect x="128" y="258" width="4" height="90" fill="#302818"/>
+      <rect x="152" y="266" width="18" height="82" rx="2" fill="#3a2040"/><rect x="152" y="266" width="3" height="82" fill="#201030"/>
+      <rect x="172" y="262" width="20" height="86" rx="2" fill="#304820"/><rect x="172" y="262" width="4" height="86" fill="#1c2e10"/>
+      <!-- bookcase hotspot -->
+      <rect x="8" y="28" width="200" height="364" fill="#d4a860" opacity="0" style="cursor:pointer" onclick="showSection('library', document.querySelector('.nav-tab:nth-child(1)'))"/>
+      <!-- bookcase label -->
+      <text x="108" y="18" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="12" fill="#c8b878" opacity=".7" font-style="italic">Library →</text>
+
+      <!-- ── ARMCHAIR (center-left) ── -->
+      <ellipse cx="310" cy="408" rx="90" ry="10" fill="#5a3010" opacity=".5"/>
+      <rect x="230" y="375" width="10" height="36" rx="3" fill="#3a2810"/>
+      <rect x="380" y="375" width="10" height="36" rx="3" fill="#3a2810"/>
+      <!-- seat -->
+      <rect x="216" y="310" width="188" height="80" rx="12" fill="#5a3828"/>
+      <rect x="220" y="314" width="180" height="72" rx="10" fill="#6a4432"/>
+      <rect x="224" y="330" width="172" height="58" rx="8" fill="#7a5040"/>
+      <rect x="228" y="334" width="164" height="50" rx="7" fill="#9a6858"/>
+      <!-- seat tufting -->
+      <line x1="310" y1="334" x2="310" y2="384" stroke="#7a5444" stroke-width="1.5" opacity=".5"/>
+      <line x1="270" y1="334" x2="270" y2="384" stroke="#7a5444" stroke-width="1.5" opacity=".5"/>
+      <line x1="350" y1="334" x2="350" y2="384" stroke="#7a5444" stroke-width="1.5" opacity=".5"/>
+      <line x1="224" y1="360" x2="392" y2="360" stroke="#7a5444" stroke-width="1.5" opacity=".5"/>
+      <!-- chair back -->
+      <rect x="210" y="200" width="200" height="124" rx="14" fill="#5a3828"/>
+      <rect x="216" y="206" width="188" height="112" rx="12" fill="#6a4432"/>
+      <rect x="220" y="210" width="180" height="104" rx="10" fill="#7a5040"/>
+      <rect x="224" y="214" width="172" height="96" rx="9" fill="#9a6858"/>
+      <!-- back tufting dots -->
+      <circle cx="270" cy="240" r="4" fill="#7a5444"/><circle cx="310" cy="240" r="4" fill="#7a5444"/><circle cx="350" cy="240" r="4" fill="#7a5444"/>
+      <circle cx="270" cy="278" r="4" fill="#7a5444"/><circle cx="310" cy="278" r="4" fill="#7a5444"/><circle cx="350" cy="278" r="4" fill="#7a5444"/>
+      <line x1="270" y1="240" x2="350" y2="240" stroke="#7a5444" stroke-width="1" opacity=".4"/>
+      <line x1="270" y1="278" x2="350" y2="278" stroke="#7a5444" stroke-width="1" opacity=".4"/>
+      <line x1="270" y1="240" x2="270" y2="278" stroke="#7a5444" stroke-width="1" opacity=".4"/>
+      <line x1="310" y1="240" x2="310" y2="278" stroke="#7a5444" stroke-width="1" opacity=".4"/>
+      <line x1="350" y1="240" x2="350" y2="278" stroke="#7a5444" stroke-width="1" opacity=".4"/>
+      <!-- armrests -->
+      <rect x="204" y="280" width="36" height="50" rx="8" fill="#5a3828"/>
+      <rect x="206" y="282" width="32" height="46" rx="7" fill="#8a6050"/>
+      <rect x="380" y="280" width="36" height="50" rx="8" fill="#5a3828"/>
+      <rect x="382" y="282" width="32" height="46" rx="7" fill="#8a6050"/>
+      <!-- rug under chair -->
+      <ellipse cx="310" cy="400" rx="120" ry="16" fill="#6a3050" opacity=".45"/>
+      <ellipse cx="310" cy="400" rx="108" ry="13" fill="#7a3858" opacity=".3"/>
+      <!-- sleeping black cat on chair -->
+      <ellipse cx="310" cy="318" rx="28" ry="11" fill="#1a1a1a"/>
+      <ellipse cx="330" cy="314" rx="12" ry="8" fill="#1a1a1a"/>
+      <circle cx="338" cy="310" r="7" fill="#222"/>
+      <ellipse cx="341" cy="308" rx="3" ry="2" fill="#333"/>
+      <polygon points="335,304 338,298 342,304" fill="#222"/>
+      <polygon points="347,305 350,299 353,306" fill="#222"/>
+      <path d="M282 322 Q275 314 280 308 Q285 304 288 310" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-linecap="round"/>
+
+      <!-- ── SIDE TABLE + JOURNAL (center, between chair and window) ── -->
+      <!-- table leg -->
+      <rect x="483" y="330" width="10" height="72" rx="3" fill="#3a2810"/>
+      <ellipse cx="488" cy="402" rx="20" ry="5" fill="#2a1e0a"/>
+      <!-- table top -->
+      <ellipse cx="488" cy="330" rx="44" ry="10" fill="#4a3418"/>
+      <ellipse cx="488" cy="326" rx="44" ry="10" fill="#5a4020"/>
+      <ellipse cx="488" cy="324" rx="42" ry="9" fill="#7a6040"/>
+      <!-- journal -->
+      <rect x="453" y="299" width="52" height="30" rx="3" fill="#2a1e10" transform="rotate(-6,478,313)"/>
+      <rect x="455" y="301" width="50" height="28" rx="2" fill="#4a3820" transform="rotate(-6,478,313)"/>
+      <rect x="502" y="300" width="4" height="26" rx="1" fill="#e8dfc0" transform="rotate(-6,504,313)"/>
+      <line x1="460" y1="308" x2="496" y2="306" stroke="#6a5030" stroke-width="1" opacity=".6" transform="rotate(-6,478,313)"/>
+      <line x1="460" y1="314" x2="496" y2="312" stroke="#6a5030" stroke-width="1" opacity=".6" transform="rotate(-6,478,313)"/>
+      <line x1="460" y1="320" x2="496" y2="318" stroke="#6a5030" stroke-width="1" opacity=".6" transform="rotate(-6,478,313)"/>
+      <!-- quill -->
+      <path d="M514 288 Q496 303 484 316" fill="none" stroke="#c8b878" stroke-width="1.5"/>
+      <path d="M514 288 Q520 280 518 273 Q512 278 514 288Z" fill="#e8d898"/>
+      <path d="M514 288 Q518 282 516 275" fill="none" stroke="#d8c880" stroke-width="1"/>
+      <!-- candle -->
+      <rect x="462" y="298" width="8" height="24" rx="1" fill="#ece4cc"/>
+      <rect x="460" y="320" width="12" height="4" rx="1" fill="#c8b890"/>
+      <path d="M466 295 Q464 290 466 286 Q468 290 466 295Z" fill="#f0a020" opacity=".9"/>
+      <path d="M466 293 Q465 290 466 287 Q467 290 466 293Z" fill="#f8d060"/>
+      <circle cx="466" cy="291" r="34" fill="url(#cg)"/>
+      <!-- journal hotspot -->
+      <ellipse cx="480" cy="308" rx="42" ry="24" fill="#a0c8a0" opacity="0" style="cursor:pointer" transform="rotate(-6,480,308)" onclick="showSection('journal', document.querySelector('.nav-tab:nth-child(2)'))"/>
+      <!-- journal label -->
+      <text x="488" y="288" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="11" fill="#8a7050" opacity=".8" font-style="italic">Journal →</text>
+
+      <!-- ── WINDOW (far right) ── -->
+      <!-- window outer frame -->
+      <rect x="590" y="58" width="216" height="276" rx="4" fill="#5a3e20"/>
+      <!-- sky -->
+      <rect x="596" y="64" width="204" height="266" fill="#88bce8"/>
+      <rect x="596" y="64" width="204" height="90" fill="#a8d0f0"/>
+      <rect x="596" y="64" width="204" height="40" fill="#c0e4ff"/>
+      <!-- sun -->
+      <circle cx="774" cy="90" r="18" fill="#f8e840" opacity=".95"/>
+      <circle cx="774" cy="90" r="14" fill="#fdf060"/>
+      <line x1="774" y1="68" x2="774" y2="60" stroke="#f8e840" stroke-width="2" opacity=".6"/>
+      <line x1="789" y1="75" x2="795" y2="69" stroke="#f8e840" stroke-width="2" opacity=".6"/>
+      <line x1="796" y1="90" x2="804" y2="90" stroke="#f8e840" stroke-width="2" opacity=".6"/>
+      <line x1="759" y1="75" x2="753" y2="69" stroke="#f8e840" stroke-width="2" opacity=".6"/>
+      <!-- clouds -->
+      <ellipse cx="650" cy="84" rx="28" ry="10" fill="white" opacity=".85"/>
+      <ellipse cx="668" cy="80" rx="18" ry="10" fill="white" opacity=".85"/>
+      <ellipse cx="632" cy="82" rx="16" ry="9" fill="white" opacity=".8"/>
+      <ellipse cx="720" cy="96" rx="20" ry="8" fill="white" opacity=".65"/>
+      <!-- meadow -->
+      <rect x="596" y="272" width="204" height="58" fill="#5a9040"/>
+      <rect x="596" y="262" width="204" height="18" fill="#6aaa4a"/>
+      <!-- hills -->
+      <ellipse cx="650" cy="270" rx="75" ry="28" fill="#4a8030"/>
+      <ellipse cx="770" cy="274" rx="80" ry="26" fill="#508838"/>
+      <!-- trees -->
+      <ellipse cx="608" cy="222" rx="18" ry="50" fill="#2d6e20"/>
+      <ellipse cx="608" cy="212" rx="14" ry="38" fill="#3a8828"/>
+      <rect x="604" y="260" width="8" height="18" fill="#5a3818"/>
+      <ellipse cx="636" cy="228" rx="16" ry="46" fill="#348a24"/>
+      <ellipse cx="636" cy="218" rx="12" ry="34" fill="#42a030"/>
+      <rect x="632" y="262" width="8" height="16" fill="#5a3818"/>
+      <ellipse cx="662" cy="224" rx="18" ry="50" fill="#2e7020"/>
+      <ellipse cx="662" cy="212" rx="14" ry="37" fill="#3c9030"/>
+      <rect x="658" y="262" width="8" height="18" fill="#5a3818"/>
+      <ellipse cx="692" cy="226" rx="16" ry="44" fill="#368c26"/>
+      <ellipse cx="710" cy="222" rx="18" ry="48" fill="#2e7022"/>
+      <ellipse cx="740" cy="226" rx="16" ry="46" fill="#348a24"/>
+      <ellipse cx="768" cy="222" rx="18" ry="50" fill="#2d6e20"/>
+      <ellipse cx="794" cy="228" rx="14" ry="42" fill="#3c9030"/>
+      <!-- trail path -->
+      <path d="M665 330 Q672 308 668 288 Q666 270 676 256 Q686 242 682 225" fill="none" stroke="#c8b070" stroke-width="9" opacity=".7"/>
+      <path d="M665 330 Q672 308 668 288 Q666 270 676 256 Q686 242 682 225" fill="none" stroke="#d8c888" stroke-width="5" opacity=".5"/>
+      <!-- wildflowers -->
+      <circle cx="658" cy="268" r="3" fill="#e860a0" opacity=".8"/>
+      <circle cx="678" cy="262" r="2.5" fill="#f0c030" opacity=".8"/>
+      <circle cx="654" cy="278" r="2" fill="#e060a0" opacity=".7"/>
+      <circle cx="682" cy="272" r="3" fill="#8060e0" opacity=".8"/>
+      <!-- butterfly -->
+      <ellipse cx="694" cy="252" rx="6" ry="4" fill="#f080c0" opacity=".85" transform="rotate(-20,694,252)"/>
+      <ellipse cx="688" cy="254" rx="5" ry="3" fill="#f090d0" opacity=".8" transform="rotate(20,688,254)"/>
+      <!-- window cross -->
+      <line x1="698" y1="58" x2="698" y2="334" stroke="#5a3e20" stroke-width="5"/>
+      <line x1="590" y1="197" x2="806" y2="197" stroke="#5a3e20" stroke-width="5"/>
+      <!-- window sill -->
+      <rect x="582" y="330" width="232" height="12" rx="2" fill="#7a5530"/>
+      <!-- windowsill plant -->
+      <ellipse cx="620" cy="334" rx="12" ry="6" fill="#3a2a14"/>
+      <path d="M620 332 Q612 317 607 307" fill="none" stroke="#2a5020" stroke-width="2.5"/>
+      <ellipse cx="605" cy="305" rx="7" ry="5" fill="#3a7028" transform="rotate(-20,605,305)"/>
+      <path d="M620 330 Q627 316 632 306" fill="none" stroke="#2a5020" stroke-width="2.5"/>
+      <ellipse cx="634" cy="304" rx="7" ry="5" fill="#3a7028" transform="rotate(15,634,304)"/>
+      <!-- window hotspot -->
+      <rect x="596" y="64" width="204" height="266" fill="#a0c8ff" opacity="0" style="cursor:pointer" onclick="showSection('trail', document.querySelector('.nav-tab:nth-child(3)'))"/>
+      <!-- window label -->
+      <text x="698" y="352" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="13" fill="#7a6040" opacity=".8" font-style="italic">The Trail →</text>
+
+      <!-- ── TOP DARK FADE (over everything) ── -->
+      <rect width="820" height="520" fill="url(#wallFade)"/>
+    </svg>
+  </div>
+  <div style="display:flex;gap:2rem;margin-top:1.25rem;justify-content:center;flex-wrap:wrap">
+    <div onclick="showSection('library', document.querySelector('.nav-tab:nth-child(1)'))" style="cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:15px;color:#6a5a3a;font-style:italic;transition:color .15s" onmouseover="this.style.color='#c8b888'" onmouseout="this.style.color='#6a5a3a'">↑ bookshelf — library</div>
+    <div onclick="showSection('journal', document.querySelector('.nav-tab:nth-child(2)'))" style="cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:15px;color:#6a5a3a;font-style:italic;transition:color .15s" onmouseover="this.style.color='#c8b888'" onmouseout="this.style.color='#6a5a3a'">↑ journal — my sightings</div>
+    <div onclick="showSection('trail', document.querySelector('.nav-tab:nth-child(3)'))" style="cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:15px;color:#6a5a3a;font-style:italic;transition:color .15s" onmouseover="this.style.color='#c8b888'" onmouseout="this.style.color='#6a5a3a'">↑ window — the trail</div>
+  </div>
+</div>
+</div>
+
+<!-- ══ LIBRARY ══ -->
+<div class="section active" id="section-library">
+  <div class="library">
+    <div class="library-header">
+      <div class="library-title">The Library</div>
+      <div class="library-sub">Southeastern flora — click a volume to explore</div>
+    </div>
+    <div class="bookshelf-wrap">
+    <div class="bookshelf" id="bookshelf"></div>
+    <div class="shelf-floor"></div>
+    </div>
+    <div class="plant-drawer" id="plantDrawer">
+      <div class="drawer-header">
+        <div class="drawer-title" id="drawerTitle"></div>
+        <div class="drawer-search-wrap">
+          <i class="ti ti-search"></i>
+          <input type="text" class="drawer-search" id="drawerSearch" placeholder="Search…" oninput="filterDrawer()">
+        </div>
+        <button class="close-drawer" onclick="closeDrawer()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="plant-grid" id="plantGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ JOURNAL ══ -->
+<div class="section" id="section-journal">
+  <div class="journal">
+    <div class="journal-header">
+      <div class="journal-title">My Journal</div>
+      <div class="journal-sub">Field observations, sightings & personal notes</div>
+    </div>
+    <div class="new-entry-card">
+      <div class="ne-title">New Entry</div>
+      <div class="ne-grid">
+        <div class="ne-field"><div class="ne-lbl">Plant name</div><input class="ne-input" id="neeName" placeholder="Common or latin name…" type="text"></div>
+        <div class="ne-field"><div class="ne-lbl">Date</div><input class="ne-input" id="neeDate" type="date"></div>
+        <div class="ne-field"><div class="ne-lbl">Location</div><input class="ne-input" id="neeLoc" placeholder="Where did you see it?" type="text"><button class="btn-outline" style="margin-top:.35rem;font-size:12.5px;padding:4px 10px" onclick="getLocation()"><i class="ti ti-map-pin" style="font-size:12px;vertical-align:-1px"></i> Use my location</button></div>
+        <div class="ne-field full"><div class="ne-lbl">Observations</div><textarea class="ne-input" id="neeNotes" placeholder="What did you notice? Leaf shape, smell, context…"></textarea></div>
+      </div>
+      <div class="ne-lbl" style="margin-bottom:.4rem">Photos</div>
+      <div class="img-preview-wrap" id="neePreviewWrap"></div>
+      <div class="image-upload-row">
+        <label class="img-upload-btn"><i class="ti ti-camera"></i> Add photo <input type="file" accept="image/*" multiple style="display:none" onchange="handleNewEntryImages(event)"></label>
+      </div>
+      <div class="ne-actions">
+        <button class="btn-moss" onclick="saveNewEntry()"><i class="ti ti-check" style="font-size:13px;vertical-align:-1px;margin-right:4px"></i>Save entry</button>
+        <button class="btn-outline" onclick="clearNewEntry()">Clear</button>
+      </div>
+    </div>
+    <div class="entries-list" id="entriesList"></div>
+  </div>
+</div>
+
+<!-- ══ TRAIL ══ -->
+<div class="section" id="section-trail">
+  <div class="trail-section">
+    <div class="trail-header">
+      <div class="trail-title">The Trail</div>
+      <div class="trail-sub">Learn to identify the plants around you</div>
+    </div>
+    <div class="trail-viz">
+      <div class="trail-score-row">
+        <div class="trail-score" id="trailScore">0 pts</div>
+        <div class="trail-pts" id="trailLevel">Seedling</div>
+      </div>
+      <div class="trail-path">
+        <div class="trail-fill" id="trailFill" style="width:0%"></div>
+        <div class="trail-cat" id="trailCat" style="left:0%">🐱</div>
+      </div>
+      <div class="trail-markers">
+        <span class="trail-marker">Seedling</span>
+        <span class="trail-marker">Sprout</span>
+        <span class="trail-marker">Herb</span>
+        <span class="trail-marker">Forager</span>
+        <span class="trail-marker">Herbalist</span>
+      </div>
+    </div>
+    <div class="game-chooser">
+      <div class="game-tile active" id="gt-flash" onclick="selectGame('flashcard',this)">
+        <span class="game-icon">🃏</span>
+        <div class="game-name">Flashcards</div>
+        <div class="game-desc">Flip & learn</div>
+      </div>
+      <div class="game-tile" id="gt-match" onclick="selectGame('match',this)">
+        <span class="game-icon">🔎</span>
+        <div class="game-name">Name Match</div>
+        <div class="game-desc">Photo → name</div>
+      </div>
+      <div class="game-tile" id="gt-tags" onclick="selectGame('tags',this)">
+        <span class="game-icon">🏷️</span>
+        <div class="game-name">Tag It</div>
+        <div class="game-desc">Pick the properties</div>
+      </div>
+    </div>
+    <div class="game-area" id="gameArea"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const PLANTS = [
+  {id:'pawpaw',common:'Pawpaw',latin:'Asimina triloba',tags:['edible','tree'],sigil:'🌿',region:'NC, TN, AL, GA, SC',habitat:'Moist bottomland forests, stream banks',season:'Fruit: Sept–Oct',identify:'Large drooping leaves up to 12 inches, tropical-looking. Small maroon flowers in spring before leaves emerge. Fruit is green, mango-shaped, turns yellow when ripe.',edible:'Fruit tastes like a cross between banana, mango, and custard. Eat fresh or in baked goods. Seeds are toxic.',medicinal:'Bark and leaves contain acetogenins — studied for anti-cancer properties. Seeds contain a natural insecticide.',lore:'Called "Indiana banana." The only North American member of a tropical fruit family. Cherokee used the inner bark to make rope.',caution:null,wiki:'Asimina_triloba',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Asimina_triloba_fruits.jpg/640px-Asimina_triloba_fruits.jpg'},
+  {id:'elderberry',common:'Elderberry',latin:'Sambucus canadensis',tags:['edible','medicinal','shrub'],sigil:'🍇',region:'NC, TN, AL, GA, SC, VA',habitat:'Forest edges, roadsides, stream banks',season:'Flowers: May–June · Berries: Aug–Sept',identify:'Multi-stemmed shrub to 12 feet. Flat-topped clusters of tiny white flowers, followed by dark purple-black berries. Stems have white pithy interior.',edible:'Berries used for syrup, wine, jelly. Flowers steeped for tea or fried in batter. Must be cooked — raw berries cause nausea.',medicinal:'Elderberry syrup shown in studies to reduce flu duration. Anti-inflammatory, antioxidant-rich.',lore:'In Appalachian folklore, elder is a threshold plant — standing between the seen and unseen worlds.',caution:'Raw berries, leaves, bark contain sambunigrin. Berries must be cooked.',wiki:'Sambucus_canadensis',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Sambucus-berries.jpg/640px-Sambucus-berries.jpg'},
+  {id:'blackcohosh',common:'Black Cohosh',latin:'Actaea racemosa',tags:['medicinal','wildflower'],sigil:'🌾',region:'NC, TN, VA, WV',habitat:'Rich deciduous forest understory, hillsides',season:'Flowers: June–August',identify:'Tall woodland perennial 3–6 feet. Dramatic white bottle-brush flower spikes. Leaves three-times compound with sharply toothed leaflets.',edible:null,medicinal:'Researched for menstrual and menopausal support. Used by Cherokee for centuries. Some studies show efficacy for hot flashes.',lore:'Name from Algonquin "cohosh" meaning rough. Ecologically threatened due to overharvesting.',caution:'Do not use during pregnancy. Avoid in liver disease.',wiki:'Actaea_racemosa',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Actaea_racemosa_2.jpg/640px-Actaea_racemosa_2.jpg'},
+  {id:'mayapple',common:'Mayapple',latin:'Podophyllum peltatum',tags:['medicinal','toxic','wildflower'],sigil:'☂',region:'NC, TN, AL, GA, SC, VA',habitat:'Moist forest floors, often forming large colonies',season:'Flowers: April–May · Fruit: June',identify:'Umbrella-like leaves up to 18 inches. Single white flower hidden beneath the leaves. Forms large colonies of single-stemmed and forked plants.',edible:'Ripe yellow fruit is edible and tart. Only eat fully ripe fruit in small amounts.',medicinal:'Root contains podophyllotoxin — pharmaceutical precursor used in cancer drugs and wart treatment.',lore:'Appalachian spring wildflower, one of the first signs of forest awakening.',caution:'ALL parts except ripe fruit are highly toxic. Root can cause nerve damage and fatality. Never handle root with bare hands.',wiki:'Podophyllum_peltatum',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Podophyllum_peltatum.jpg/640px-Podophyllum_peltatum.jpg'},
+  {id:'goldenseal',common:'Goldenseal',latin:'Hydrastis canadensis',tags:['medicinal'],sigil:'✦',region:'NC, TN, WV, VA',habitat:'Rich, shaded deciduous forests; increasingly rare',season:'Flowers: April–May',identify:'Low woodland herb 6–12 inches with deeply lobed palmate leaves and yellow-orange root. Small white flower, red fruit cluster. Two large wrinkled leaves at stem top.',edible:null,medicinal:'Contains berberine — potent antimicrobial. Used for respiratory, digestive infections. Cherokee used root as a yellow dye.',lore:'One of the most commercially harvested medicinal plants, now endangered in the wild.',caution:'Do not use during pregnancy. Not for extended use. May interact with blood thinners.',wiki:'Hydrastis_canadensis',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Hydrastis_canadensis1.jpg/640px-Hydrastis_canadensis1.jpg'},
+  {id:'spicebush',common:'Spicebush',latin:'Lindera benzoin',tags:['edible','medicinal','shrub'],sigil:'🌿',region:'NC, TN, AL, GA, VA, SC',habitat:'Moist forest understory, stream banks',season:'Flowers: March–April · Berries: Sept',identify:'Understory shrub to 15 feet. First shrub to bloom — tiny yellow flowers before leaves. Leaves intensely spicy-fragrant when crushed. Bright red berries in fall.',edible:'Berries dried and ground are an allspice substitute — called "Appalachian allspice." Twigs and leaves used to make spicy tea.',medicinal:'Bark tea used for fevers, colds, and spring tonic.',lore:'Host plant for the Spicebush Swallowtail butterfly. Cherokee used its early bloom to signal planting time.',caution:null,wiki:'Lindera_benzoin',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Lindera_benzoin.jpg/640px-Lindera_benzoin.jpg'},
+  {id:'passionflower',common:'Purple Passionflower',latin:'Passiflora incarnata',tags:['edible','medicinal','vine'],sigil:'✿',region:'NC, TN, AL, GA, SC, VA',habitat:'Forest edges, roadsides, open woods, disturbed areas',season:'Flowers: June–Sept · Fruit: Aug–Oct',identify:'Climbing vine with deeply lobed three-part leaves and tendrils. Extraordinary flowers with purple and white corona filaments. Fruit is an egg-shaped yellow-green maypop.',edible:'Ripe maypops are fragrant, tart-sweet. Made into jelly, juice, or eaten fresh.',medicinal:'Clinical trials support anxiolytic effects comparable in some studies to low-dose benzodiazepines without dependency. Used for insomnia and nervous tension.',lore:'Spanish missionaries saw the flower parts as symbols of the crucifixion. "Maypop" comes from the popping sound ripe fruit makes underfoot.',caution:'May interact with sedative medications. Avoid in pregnancy.',wiki:'Passiflora_incarnata',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Passiflora_incarnata.jpg/640px-Passiflora_incarnata.jpg'},
+  {id:'sassafras',common:'Sassafras',latin:'Sassafras albidum',tags:['edible','medicinal','tree'],sigil:'🍂',region:'NC, TN, AL, GA, SC, VA',habitat:'Roadsides, forest edges, old fields',season:'Flowers: March–April',identify:'Distinctive mitten-shaped leaves — same tree has unlobed, one-thumb, and two-thumb forms. Small yellow flowers before leaves. Bark reddish-brown, deeply furrowed. Leaves smell like root beer when crushed.',edible:'Root bark is the original root beer flavor. Leaves dried and ground make filé powder for gumbo. Twigs make pleasant tea.',medicinal:'Traditionally used as a spring tonic and blood purifier.',lore:'One of the first North American exports to Europe — sought as a cure for syphilis in the 1500s. Entire ships were loaded with it.',caution:'Safrole in concentrated amounts (especially essential oil) is carcinogenic. Occasional root bark tea generally considered safe.',wiki:'Sassafras_albidum',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Sassafras-albidum-leaves.jpg/640px-Sassafras-albidum-leaves.jpg'},
+  {id:'jewelweed',common:'Jewelweed',latin:'Impatiens capensis',tags:['medicinal','wildflower'],sigil:'💧',region:'NC, TN, AL, GA, SC, VA',habitat:'Wet areas, stream banks — often grows near poison ivy',season:'Flowers: June–Oct',identify:'Soft-stemmed annual 2–5 feet. Translucent stems. Orange spotted flowers that dangle. Seed pods explode when touched. Grows in moist shaded areas.',edible:'Young shoots can be cooked as a potherb. Seeds taste like walnuts.',medicinal:'Classic folk remedy for poison ivy — crush the juicy stem and apply immediately. Also used for stinging nettle, athlete\'s foot.',lore:'Nature\'s gift: usually grows right alongside poison ivy. Named for water beading on leaves like scattered gems.',caution:null,wiki:'Impatiens_capensis',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Impatiens_capensis.jpg/640px-Impatiens_capensis.jpg'},
+  {id:'ramps',common:'Ramps / Wild Leek',latin:'Allium tricoccum',tags:['edible','wildflower'],sigil:'🧅',region:'NC, TN, WV, VA',habitat:'Rich deciduous forest, north-facing slopes',season:'Leaves: March–May · Flowers: June–July',identify:'Broad smooth elliptical leaves (2–3, from a single bulb). Strongly garlic-onion scented — smell is the key identifier. White flower clusters on a bare stalk.',edible:'Entire plant edible — leaves, bulbs, flowers. A beloved Appalachian spring food. Eaten raw, sautéed, pickled, or with eggs.',medicinal:'High in vitamins A and C, selenium. Antibiotic and cholesterol-lowering properties from allicin compounds.',lore:'Ramp festivals in WNC and TN have been held for over 50 years. Children were sometimes sent home from school after eating them.',caution:'Harvest no more than 10% of a colony. Lily of the valley (toxic) looks similar — but lacks garlic smell.',wiki:'Allium_tricoccum',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Allium_tricoccum_asa.jpg/640px-Allium_tricoccum_asa.jpg'},
+  {id:'poke',common:'Pokeweed',latin:'Phytolacca americana',tags:['edible','medicinal','toxic'],sigil:'⚠',region:'NC, TN, AL, GA, SC, VA',habitat:'Disturbed areas, forest edges, old fields, roadsides',season:'May–Oct',identify:'Enormous plant 6–10 feet with magenta-purple stems, large oval leaves, long clusters of dark purple berries. White flowers followed by staining berries.',edible:'Young spring shoots under 6 inches eaten as "poke sallet" — must be parboiled twice with water changes. A traditional Appalachian food.',medicinal:'Contains pokeweed antiviral protein (PAP) studied for anti-HIV and anti-tumor properties.',lore:'"Poke Salad Annie" references the Appalachian practice. Confederate soldiers used berry juice as ink.',caution:'Highly toxic — roots, mature leaves, berries can be fatal. Young shoots require thorough cooking. Berries especially dangerous for children.',wiki:'Phytolacca_americana',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Phytolacca_americana_berries.jpg/640px-Phytolacca_americana_berries.jpg'},
+  {id:'black_walnut',common:'Black Walnut',latin:'Juglans nigra',tags:['edible','medicinal','tree'],sigil:'🌰',region:'NC, TN, AL, GA, VA',habitat:'Rich bottomlands, hillsides, forest edges',season:'Nuts: Sept–Oct',identify:'Large tree with compound leaves (15–23 leaflets). Green tennis-ball-sized husks turn black when ripe, smell strongly of citrus. Dark, deeply furrowed bark.',edible:'Nuts are intensely flavored — richer than English walnut. Used in baking, ice cream, candy. Husks make natural brown-black dye.',medicinal:'Hull is a traditional anti-parasitic — contains juglone with antifungal and antiparasitic activity.',lore:'Roots secrete juglone, killing many surrounding plants. Squirrels bury thousands and forget many — directly planting the next generation.',caution:'Juglone can cause skin irritation. Hull tincture stains skin dark brown for weeks.',wiki:'Juglans_nigra',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Juglans_nigra_USDA_web.jpg/640px-Juglans_nigra_USDA_web.jpg'},
+  {id:'witch_hazel',common:'Witch Hazel',latin:'Hamamelis virginiana',tags:['medicinal','shrub'],sigil:'✦',region:'NC, TN, AL, GA, VA, SC',habitat:'Understory of mixed deciduous forests, rocky slopes',season:'Flowers: Oct–Dec',identify:'Large shrub to 15 feet. Bright yellow spider-like flowers appear in late fall and winter — unusual flowering time. Wavy-toothed oval leaves. Seed pods catapult seeds up to 30 feet.',edible:null,medicinal:'One of the most widely used plant medicines in North America. Tannins are astringent, anti-inflammatory. Used for hemorrhoids, varicose veins, bruises, skin irritation.',lore:'Forked branches traditionally used as divining rods to find water. Blooms at the dark of the year — flowers when all others sleep.',caution:null,wiki:'Hamamelis_virginiana',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Hamamelis_virginiana1.jpg/640px-Hamamelis_virginiana1.jpg'},
+  {id:'violet',common:'Common Blue Violet',latin:'Viola sororia',tags:['edible','medicinal','wildflower'],sigil:'✿',region:'NC, TN, AL, GA, SC, VA',habitat:'Lawns, forest edges, disturbed areas, roadsides',season:'March–June',identify:'Classic lawn wildflower. Heart-shaped toothed leaves. Five-petaled flowers ranging from deep purple to nearly white. Produces hidden self-pollinating ground flowers.',edible:'Leaves and flowers edible — among the highest plant sources of vitamins C and A. Leaves thicken soups. Flowers make purple jelly.',medicinal:'Leaf poultice for headaches and skin. High in rutin, which strengthens capillaries. Used for respiratory congestion.',lore:'In Appalachia, finding a single violet bloom when the moon is waxing is considered an auspicious sign.',caution:null,wiki:'Viola_sororia',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Viola_sororia_Viola_papilionacea_Blue_Violet_1500px.jpg/640px-Viola_sororia_Viola_papilionacea_Blue_Violet_1500px.jpg'},
+  {id:'bloodroot',common:'Bloodroot',latin:'Sanguinaria canadensis',tags:['medicinal','wildflower','toxic'],sigil:'⬡',region:'NC, TN, AL, GA, VA, WV',habitat:'Rich deciduous forest floors, flood plains',season:'March–April',identify:'Spring ephemeral with a single white flower (8–16 petals) cradled in a deeply lobed leaf. Flowers last only 1–3 days. Distinctive blood-red sap in root and stem.',edible:null,medicinal:'Contains sanguinarine — active in FDA-approved toothpastes for gingivitis. Historical use for respiratory conditions and warts.',lore:'Cherokee and many nations used the root as body paint and war paint. Its brief spring bloom is eagerly anticipated by wildflower enthusiasts.',caution:'Toxic — sanguinarine is poisonous in significant doses. "Black salve" products containing bloodroot have caused serious disfigurement.',wiki:'Sanguinaria_canadensis',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Sanguinaria_canadensis_Bloodroot.jpg/640px-Sanguinaria_canadensis_Bloodroot.jpg'},
+  {id:'persimmon',common:'Persimmon',latin:'Diospyros virginiana',tags:['edible','tree'],sigil:'🍊',region:'NC, TN, AL, GA, SC, VA',habitat:'Old fields, forest edges, disturbed areas, roadsides',season:'Fruit: Oct–Nov (after frost)',identify:'Medium tree with distinctive dark blocky "alligator bark." Oval shiny leaves. Small white flowers. Round orange-purple fruit looks like a miniature pumpkin.',edible:'Ripe fruit after frost is exceptionally sweet and rich — like dates and honey. Unripe fruit is intensely astringent. Used in puddings, breads, and beer.',medicinal:'Unripe fruit tea used for sore throat and diarrhea. Bark for hemorrhoids and fever.',lore:'The pattern inside the seed is said to predict winter: spoon = heavy snow, fork = mild winter, knife = cold that cuts.',caution:null,wiki:'Diospyros_virginiana',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Diospyros_virginiana_fruits.jpg/640px-Diospyros_virginiana_fruits.jpg'},
+  {id:'serviceberry',common:'Serviceberry',latin:'Amelanchier arborea',tags:['edible','tree'],sigil:'✧',region:'NC, TN, AL, GA, SC, VA',habitat:'Forest edges, rocky slopes, stream banks',season:'Flowers: March–April · Berries: May–June',identify:'Small tree with white flower clusters before leaves emerge. Smooth gray bark. Berries turn from red to dark purple-black when ripe — look like small blueberries.',edible:'Berries are sweet and almond-flavored — one of the first wild fruits of the year. Excellent in pies, jams, and dried like raisins.',medicinal:'Bark tea for delayed menstruation. Berry tea for mild fever.',lore:'"Serviceberry" derives from it blooming when ground thaws enough for burial — for services over those who died during winter.',caution:null,wiki:'Amelanchier_arborea',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Amelanchier_arborea.jpg/640px-Amelanchier_arborea.jpg'},
+  {id:'wild_bergamot',common:'Wild Bergamot',latin:'Monarda fistulosa',tags:['edible','medicinal','wildflower'],sigil:'✶',region:'NC, TN, AL, GA, VA',habitat:'Dry open woods, meadows, roadsides',season:'June–Sept',identify:'Aromatic perennial 2–4 feet with square stems (mint family). Lavender-pink flowers in dense globe-shaped heads. Leaves strongly oregano-scented when crushed.',edible:'Leaves and flowers used as an oregano-like seasoning. Flowers brewed as "Oswego tea" — used as a substitute during the Boston Tea Party boycott.',medicinal:'Contains thymol and carvacrol. Antimicrobial, used for respiratory infections, fevers.',lore:'Named by botanist John Bartram after the Oswego people who taught him its use. Colonists adopted it after the Boston Tea Party.',caution:null,wiki:'Monarda_fistulosa',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Monarda_fistulosa.jpg/640px-Monarda_fistulosa.jpg'},
+  {id:'ginseng',common:'American Ginseng',latin:'Panax quinquefolius',tags:['medicinal'],sigil:'☽',region:'NC, TN, WV, VA',habitat:'Rich, shaded deciduous forest, north-facing slopes',season:'Flowers: June–July · Berries: Aug',identify:'Woodland herb 6–18 inches with a single whorl of palmately compound leaves. Red berries in summer. Old roots develop a distinctive human-like branched form.',edible:'Root eaten raw or cooked — slightly bitter, carrot-like.',medicinal:'One of the most valued adaptogenic herbs. Research supports properties helping the body resist stress, improving immune function and cognition.',lore:'Wild Appalachian roots harvested to near extinction due to demand in traditional Chinese medicine. "Sangers" are a distinct Appalachian tradition.',caution:'Heavily overharvested — federally regulated. Do not harvest wild plants. May interact with blood thinners and diabetes medications.',wiki:'Panax_quinquefolius',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Panax_quinquefolius_P1230348.jpg/640px-Panax_quinquefolius_P1230348.jpg'},
+  {id:'chickweed',common:'Common Chickweed',latin:'Stellaria media',tags:['edible','medicinal','wildflower'],sigil:'∗',region:'NC, TN, AL, GA, SC, VA',habitat:'Gardens, lawns, disturbed areas — cool season',season:'Oct–May',identify:'Low mat-forming plant with small oval leaves and tiny deeply-notched white flowers. Distinctive single line of hairs along the stem that switches sides at each node.',edible:'Excellent raw green — mild, tender, slightly sweet. One of the best early-spring and fall wild greens. Add to salads, sandwiches, pesto.',medicinal:'Cooling anti-inflammatory — poultice for skin irritation, itching, burns, eczema.',lore:'A "threshold" plant — grows at the edge of cultivation. Folk herbalism considers threshold plants to have liminal qualities.',caution:null,wiki:'Stellaria_media',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Stellaria_media_002.JPG/640px-Stellaria_media_002.JPG'},
+  {id:'christmas_fern',common:'Christmas Fern',latin:'Polystichum acrostichoides',tags:['fern','medicinal'],sigil:'⌘',region:'NC, TN, AL, GA, SC, VA',habitat:'Moist woodland slopes and ravines',season:'Evergreen',identify:'Evergreen fern with once-pinnate fronds. Each leaflet has a small "ear" or "toe" at the base shaped like a Christmas stocking. Forms lush dark-green clumps in forest.',edible:'Fiddleheads edible in spring — best lightly cooked.',medicinal:'Root used by Cherokee for chills, fever, rheumatism. Leaves poulticed for headache.',lore:'Stays green through winter, important for holiday decorations. Cherokee used fronds to line game holes and storage pits.',caution:null,wiki:'Polystichum_acrostichoides',photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Polystichum_acrostichoides_Christmas_Fern.jpg/640px-Polystichum_acrostichoides_Christmas_Fern.jpg'}
+];
+
+const BOOKS = [
+  {id:'all',label:'All Plants',icon:'📚',color:'all',filter:p=>true},
+  {id:'trees',label:'Trees',icon:'🌲',color:'trees',filter:p=>p.tags.includes('tree')},
+  {id:'medicinal',label:'Medicinal',icon:'🌿',color:'medicinal',filter:p=>p.tags.includes('medicinal')},
+  {id:'edible',label:'Edible',icon:'🍃',color:'edible',filter:p=>p.tags.includes('edible')},
+  {id:'wildflowers',label:'Wildflowers',icon:'🌸',color:'wildflowers',filter:p=>p.tags.includes('wildflower')},
+  {id:'shrubs',label:'Shrubs & Vines',icon:'🌱',color:'shrubs',filter:p=>p.tags.includes('shrub')||p.tags.includes('vine')||p.tags.includes('fern')},
+  {id:'caution',label:'Caution',icon:'⚠️',color:'caution',filter:p=>p.tags.includes('toxic')},
+];
+
+const ALL_TAGS = ['edible','medicinal','toxic','deciduous','evergreen','native','tree','shrub','vine','wildflower','fern','aromatic','spring ephemeral'];
+
+// ── STATE ──
+let notes={}, favs=new Set(), entries=[], points=0, currentGame='flashcard';
+let customPlants=[];  // user-approved plants from journal
+let flashIdx=0, flashFlipped=false, flashPool=[], matchActive=null;
+let tagPlant=null, tagSelected=new Set(), tagSubmitted=false;
+let activeBookFilter=null, activeBookSearch='';
+
+try{const s=localStorage.getItem('gg_notes');if(s)notes=JSON.parse(s);}catch(e){}
+try{const s=localStorage.getItem('gg_favs');if(s)favs=new Set(JSON.parse(s));}catch(e){}
+try{const s=localStorage.getItem('gg_entries');if(s)entries=JSON.parse(s);}catch(e){}
+try{const s=localStorage.getItem('gg_points');if(s)points=parseInt(s)||0;}catch(e){}
+try{const s=localStorage.getItem('gg_custom');if(s)customPlants=JSON.parse(s);}catch(e){}
+
+// set today's date
+document.getElementById('neeDate').value=new Date().toISOString().slice(0,10);
+
+// ── NAV ──
+function showSection(id,tab){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('section-'+id).classList.add('active');
+  if(tab) tab.classList.add('active');
+  if(id==='trail') renderGame();
+}
+
+// ── LIBRARY ──
+function buildBookshelf(){
+  const shelf=document.getElementById('bookshelf');
+  shelf.innerHTML=BOOKS.map(b=>{
+    const count=allPlants().filter(b.filter).length;
+    return `<div class="book book-${b.color}" onclick="openBook('${b.id}')">
+      <div class="book-spine">
+        <span class="book-icon">${b.icon}</span>
+        <span class="book-label">${b.label}</span>
+        <span class="book-count">${count}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openBook(id){
+  const book=BOOKS.find(b=>b.id===id);
+  activeBookFilter=book.filter;
+  activeBookSearch='';
+  document.getElementById('drawerTitle').textContent=book.label;
+  document.getElementById('drawerSearch').value='';
+  document.getElementById('plantDrawer').classList.add('open');
+  document.getElementById('plantDrawer').scrollIntoView({behavior:'smooth',block:'nearest'});
+  renderGrid();
+}
+
+function closeDrawer(){
+  document.getElementById('plantDrawer').classList.remove('open');
+}
+
+function filterDrawer(){
+  activeBookSearch=document.getElementById('drawerSearch').value.toLowerCase();
+  renderGrid();
+}
+
+function renderGrid(){
+  let plants=allPlants().filter(activeBookFilter);
+  if(activeBookSearch) plants=plants.filter(p=>[p.common,p.latin,p.tags.join(' ')].join(' ').toLowerCase().includes(activeBookSearch));
+  const grid=document.getElementById('plantGrid');
+  if(!plants.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">No plants found.</div>';return;}
+  grid.innerHTML=plants.map(p=>{
+    const photo=getPlantPhoto(p);
+    const tagHtml=p.tags.slice(0,2).map(t=>`<span class="tile-tag tile-tag-${t}">${t}</span>`).join('');
+    return `<div class="plant-tile" onclick="openPlant('${p.id}')">
+      <div class="tile-img-wrap">
+        ${photo?`<img class="tile-img" src="${photo}" alt="${p.common}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="tile-img-placeholder" style="display:none">${p.sigil}</div>`
+        :`<div class="tile-img-placeholder">${p.sigil}</div>`}
+      </div>
+      <div class="tile-body">
+        <div class="tile-common">${p.common}</div>
+        <div class="tile-latin">${p.latin}</div>
+        <div class="tile-tags">${tagHtml}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function handleTileUpload(e,id){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{savePlantPhoto(id,ev.target.result);renderGrid();};
+  r.readAsDataURL(f);
+}
+
+function openPlant(id){
+  const p=allPlants().find(x=>x.id===id);
+  if(!p) return;
+  const photo=getPlantPhoto(p);
+  const imgWrap=document.getElementById('modalImgWrap');
+  const body=document.getElementById('modalBody');
+  imgWrap.innerHTML=photo
+    ?`<img class="modal-img" src="${photo}" alt="${p.common}" onerror="this.outerHTML='<div class=modal-img-placeholder>${p.sigil}</div>'">`
+    :`<div class="modal-img-placeholder">${p.sigil}</div>`;
+  const tagHtml=p.tags.map(t=>`<span class="modal-tag tile-tag tile-tag-${t}">${t}</span>`).join('');
+  body.innerHTML=`
+    <div class="modal-top">
+      <div><div class="modal-common">${p.common}</div><div class="modal-latin">${p.latin}</div></div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <label style="cursor:pointer;font-size:12.5px;color:var(--fog);font-style:italic;padding:4px 8px;border:1px solid var(--bone);border-radius:4px;transition:color .15s" title="Upload your own photo">
+          📷 ${photo?'replace photo':'add photo'}
+          <input type="file" accept="image/*" style="display:none" onchange="handleModalUpload(event,'${p.id}')">
+        </label>
+        <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+      </div>
+    </div>
+    <div class="modal-tags">${tagHtml}</div>
+    ${p.caution?`<div class="caution-box">⚠ ${p.caution}</div>`:''}
+    <div class="facts-row">
+      <div class="fact-box"><div class="fact-lbl">Region</div><div class="fact-val">${p.region}</div></div>
+      <div class="fact-box"><div class="fact-lbl">Habitat</div><div class="fact-val">${p.habitat}</div></div>
+      <div class="fact-box"><div class="fact-lbl">Season</div><div class="fact-val">${p.season}</div></div>
+    </div>
+    <div class="sec-lbl">Identification</div>
+    <div class="sec-body">${p.identify}</div>
+    ${p.edible?`<div class="sec-lbl">Edible Uses</div><div class="sec-body">${p.edible}</div>`:''}
+    ${p.medicinal?`<div class="sec-lbl">Medicinal Properties</div><div class="sec-body">${p.medicinal}</div>`:''}
+    ${p.lore?`<div class="lore-box">${p.lore}</div>`:''}
+    ${photo?`<div class="photo-credit">Photo: ${plantPhotos[p.id]?'your upload':'Wikimedia Commons'}</div>`:''}
+    <div class="sec-lbl" style="margin-top:.25rem">Field Notes</div>
+    <textarea class="note-ta" id="modal-note-${p.id}" placeholder="Your observations…">${notes[p.id]||''}</textarea>
+    <div class="note-row">
+      <span class="saved-msg" id="modal-saved-${p.id}">Saved</span>
+      <button class="btn-moss" onclick="saveModalNote('${p.id}')">Save note</button>
+    </div>`;
+  document.getElementById('plantModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function handleModalUpload(e,id){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{savePlantPhoto(id,ev.target.result);openPlant(id);};
+  r.readAsDataURL(f);
+}
+
+function saveModalNote(id){
+  const ta=document.getElementById('modal-note-'+id);
+  if(ta){notes[id]=ta.value;try{localStorage.setItem('gg_notes',JSON.stringify(notes));}catch(e){}}
+  const m=document.getElementById('modal-saved-'+id);
+  if(m){m.classList.add('show');setTimeout(()=>m.classList.remove('show'),2000);}
+}
+
+function closeModal(e){
+  if(e&&e.target!==document.getElementById('plantModal')) return;
+  document.getElementById('plantModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ── JOURNAL ──
+let newEntryImages=[];
+
+function handleNewEntryImages(e){
+  const files=Array.from(e.target.files);
+  files.forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      newEntryImages.push(ev.target.result);
+      renderNewEntryPreviews();
+    };
+    reader.readAsDataURL(f);
+  });
+}
+
+function renderNewEntryPreviews(){
+  const wrap=document.getElementById('neePreviewWrap');
+  wrap.innerHTML=newEntryImages.map((src,i)=>`
+    <div class="img-thumb-wrap">
+      <img class="img-thumb" src="${src}" alt="">
+      <button class="img-thumb-del" onclick="removeNewImg(${i})">×</button>
+    </div>`).join('');
+}
+
+function removeNewImg(i){newEntryImages.splice(i,1);renderNewEntryPreviews();}
+
+function getLocation(){
+  if(!navigator.geolocation){alert('Location not available in this browser.');return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const{latitude:lat,longitude:lng}=pos.coords;
+    document.getElementById('neeLoc').value=`${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  },()=>alert('Could not get location. Try allowing location access.'));
+}
+
+async function saveNewEntry(){
+  const name=document.getElementById('neeName').value.trim();
+  if(!name){alert('Please add a plant name.');return;}
+  const desc=document.getElementById('neeNotes').value.trim();
+  const existing=entries.find(e=>e.name.toLowerCase()===name.toLowerCase());
+  const obs={date:document.getElementById('neeDate').value,location:document.getElementById('neeLoc').value.trim(),notes:desc,images:[...newEntryImages]};
+
+  let entry;
+  if(existing){
+    existing.observations.unshift(obs);
+    entry=existing;
+  } else {
+    entry={id:'e_'+Date.now(),name,observations:[obs],draft:null,approved:false};
+    entries.unshift(entry);
+  }
+  try{localStorage.setItem('gg_entries',JSON.stringify(entries));}catch(e){}
+  clearNewEntry();
+  renderEntries();
+
+  // only fetch draft if this is a new entry and not already approved/drafted
+  if(!existing && !entry.approved){
+    fetchPlantDraft(entry.id, name, desc);
+  }
+}
+
+async function fetchPlantDraft(entryId, name, userDesc){
+  const entry=entries.find(e=>e.id===entryId);
+  if(!entry) return;
+  entry.draft='loading';
+  renderEntries();
+
+  const prompt=`You are a botanist specializing in plants of the southeastern United States (North Carolina to Alabama).
+The user has recorded a plant in their field journal called "${name}".${userDesc?` Their notes: "${userDesc}".`:''}
+
+Please identify this plant and return ONLY a JSON object (no markdown, no backticks) with these exact fields:
+{
+  "common": "most common name",
+  "latin": "Genus species",
+  "tags": ["array","of","applicable","tags","from","this","list","only: edible,medicinal,toxic,tree,shrub,vine,wildflower,fern"],
+  "region": "states where found in SE US",
+  "habitat": "brief habitat description",
+  "season": "flowering/fruiting season",
+  "identify": "2-3 sentences on key identification features",
+  "edible": "edible uses if any, else null",
+  "medicinal": "medicinal properties if any, else null",
+  "lore": "one interesting folk or historical fact",
+  "caution": "any safety warnings, else null",
+  "confidence": "certain|likely|uncertain"
+}
+
+If you cannot identify it or it seems completely fictional, still return valid JSON but set confidence to "uncertain" and fill in what you can.`;
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+    });
+    const data=await resp.json();
+    const text=data.content?.find(b=>b.type==='text')?.text||'';
+    const clean=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    entry.draft=parsed;
+  } catch(err){
+    entry.draft={error:true,common:name};
+  }
+  try{localStorage.setItem('gg_entries',JSON.stringify(entries));}catch(e){}
+  renderEntries();
+}
+
+function approveDraft(entryId){
+  const entry=entries.find(e=>e.id===entryId);
+  if(!entry||!entry.draft||entry.draft.error) return;
+  const d=entry.draft;
+
+  // check not already in library
+  const existing=allPlants().find(p=>p.common.toLowerCase()===d.common.toLowerCase()||p.latin?.toLowerCase()===d.latin?.toLowerCase());
+  if(existing){
+    entry.approved=true;
+    entry.approvedId=existing.id;
+    try{localStorage.setItem('gg_entries',JSON.stringify(entries));}catch(e){}
+    renderEntries();
+    buildBookshelf();
+    return;
+  }
+
+  const id='custom_'+entryId;
+  const firstImg=entry.observations.flatMap(o=>o.images||[])[0]||null;
+  const plant={
+    id, common:d.common, latin:d.latin||'',
+    tags:Array.isArray(d.tags)?d.tags:['wildflower'],
+    sigil:'🌿', region:d.region||'SE United States',
+    habitat:d.habitat||'', season:d.season||'',
+    identify:d.identify||'', edible:d.edible||null,
+    medicinal:d.medicinal||null, lore:d.lore||null,
+    caution:d.caution||null, photo:null
+  };
+  if(firstImg) savePlantPhoto(id, firstImg);
+  customPlants.unshift(plant);
+  saveCustomPlants();
+
+  entry.approved=true;
+  entry.approvedId=id;
+  try{localStorage.setItem('gg_entries',JSON.stringify(entries));}catch(e){}
+  renderEntries();
+  buildBookshelf();
+}
+
+function retryDraft(entryId){
+  const entry=entries.find(e=>e.id===entryId);
+  if(!entry) return;
+  entry.draft=null;
+  fetchPlantDraft(entryId, entry.name, entry.observations[0]?.notes||'');
+}
+
+function clearNewEntry(){
+  document.getElementById('neeName').value='';
+  document.getElementById('neeLoc').value='';
+  document.getElementById('neeNotes').value='';
+  document.getElementById('neeDate').value=new Date().toISOString().slice(0,10);
+  newEntryImages=[];
+  renderNewEntryPreviews();
+}
+
+function deleteEntry(id){
+  if(!confirm('Delete this entire entry?')) return;
+  entries=entries.filter(e=>e.id!==id);
+  try{localStorage.setItem('gg_entries',JSON.stringify(entries));}catch(e){}
+  renderEntries();
+}
+
+function renderEntries(){
+  const list=document.getElementById('entriesList');
+  if(!entries.length){list.innerHTML='<div class="empty">No entries yet. Add your first sighting above.</div>';return;}
+  list.innerHTML=entries.map(e=>{
+    const allImgs=e.observations.flatMap(o=>o.images||[]);
+    const firstImg=allImgs[0];
+    const latestObs=e.observations[0];
+
+    // draft card
+    let draftHtml='';
+    if(e.approved){
+      draftHtml=`<div class="draft-banner approved">
+        <div class="draft-header">
+          <span class="approved-badge">✓ Added to Library &amp; Trail</span>
+          <button class="btn-edit-draft" onclick="openPlant('${e.approvedId}')">View in Library</button>
+        </div>
+      </div>`;
+    } else if(e.draft==='loading'){
+      draftHtml=`<div class="draft-banner pending">
+        <div class="draft-loading"><div class="draft-spinner"></div>Looking up plant information…</div>
+      </div>`;
+    } else if(e.draft&&e.draft.error){
+      draftHtml=`<div class="draft-banner pending">
+        <div class="draft-header"><span class="draft-title">Could not identify</span></div>
+        <div class="draft-body">The plant name wasn't recognized. Try being more specific, or add notes about what you observed.</div>
+        <div class="draft-actions">
+          <button class="btn-edit-draft" onclick="retryDraft('${e.id}')">Try again</button>
+        </div>
+      </div>`;
+    } else if(e.draft){
+      const d=e.draft;
+      const tagHtml=(d.tags||[]).map(t=>`<span class="tile-tag tile-tag-${t}">${t}</span>`).join('');
+      const confColor=d.confidence==='certain'?'#5a7a38':d.confidence==='likely'?'#8a7030':'#8a5030';
+      draftHtml=`<div class="draft-banner pending">
+        <div class="draft-header">
+          <span class="draft-title">📋 Identified: ${d.common}${d.latin?` <em style="font-weight:400;font-size:13px;color:var(--fog)">${d.latin}</em>`:''}</span>
+          <span class="draft-status" style="color:${confColor}">${d.confidence||'identified'}</span>
+        </div>
+        <div class="draft-tags">${tagHtml}</div>
+        <div class="draft-body">
+          ${d.identify||''}
+          ${d.edible?`<br><strong>Edible:</strong> ${d.edible}`:''}
+          ${d.medicinal?`<br><strong>Medicinal:</strong> ${d.medicinal}`:''}
+          ${d.caution?`<br><span style="color:var(--rust)">⚠ ${d.caution}</span>`:''}
+        </div>
+        ${d.lore?`<div style="font-size:13.5px;font-style:italic;color:var(--fog);border-left:2px solid var(--gold-light);padding-left:8px;margin-bottom:.75rem">${d.lore}</div>`:''}
+        <div class="draft-actions">
+          <button class="btn-approve" onclick="approveDraft('${e.id}')">
+            <i class="ti ti-book-upload" style="font-size:14px"></i> Add to Library &amp; Trail
+          </button>
+          <button class="btn-edit-draft" onclick="retryDraft('${e.id}')">Re-fetch</button>
+        </div>
+      </div>`;
+    }
+
+    return `<div class="entry-card">
+      <div class="entry-head">
+        <div class="entry-imgs">
+          ${firstImg?`<img class="entry-img" src="${firstImg}" alt="" onclick="openLightbox('${firstImg}')">`
+          :`<div class="entry-img-placeholder">🌿</div>`}
+        </div>
+        <div class="entry-info">
+          <div class="entry-name-row">
+            <div class="entry-name">${e.name}</div>
+            ${e.approved?`<span class="approved-badge" style="font-size:11px">✓ in library</span>`:''}
+          </div>
+          <div class="entry-meta">${e.observations.length} observation${e.observations.length!==1?'s':''} · last seen ${latestObs.date||'unknown'}${latestObs.location?' · '+latestObs.location:''}</div>
+        </div>
+        <div class="entry-actions">
+          <button class="icon-btn" onclick="toggleEntryObs('${e.id}')" title="view observations"><i class="ti ti-chevron-down" id="chevron-${e.id}"></i></button>
+          <button class="icon-btn" onclick="deleteEntry('${e.id}')" title="delete"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <div class="entry-obs" id="obs-${e.id}" style="display:none">
+        ${e.observations.map((o,oi)=>`
+          <div class="obs-item">
+            <div class="obs-date">${o.date||''}${o.location?' · '+o.location:''}</div>
+            ${o.notes?`<div class="obs-text">${o.notes}</div>`:''}
+            ${(o.images&&o.images.length)?`<div class="obs-imgs">${o.images.map(src=>`<img class="obs-img" src="${src}" onclick="openLightbox('${src}')" alt="">`).join('')}</div>`:''}
+          </div>`).join('')}
+        <div class="add-obs-row">
+          <button class="add-obs-btn" onclick="toggleAddObs('${e.id}')"><i class="ti ti-plus"></i> Add another observation</button>
+        </div>
+        <div class="add-obs-form" id="addobs-${e.id}">
+          <div class="ne-grid" style="margin-bottom:.5rem">
+            <div class="ne-field"><div class="ne-lbl">Date</div><input class="ne-input" id="ao-date-${e.id}" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+            <div class="ne-field"><div class="ne-lbl">Location</div><input class="ne-input" id="ao-loc-${e.id}" placeholder="Where?"></div>
+            <div class="ne-field full"><div class="ne-lbl">Notes</div><textarea class="ne-input" id="ao-notes-${e.id}" placeholder="What did you observe?"></textarea></div>
+          </div>
+          <label class="img-upload-btn" style="margin-bottom:.5rem"><i class="ti ti-camera"></i> Add photos <input type="file" accept="image/*" multiple style="display:none" onchange="handleAddObsImages(event,'${e.id}')"></label>
+          <div class="img-preview-wrap" id="ao-preview-${e.id}"></div>
+          <div class="ne-actions" style="margin-top:.5rem">
+            <button class="btn-moss" onclick="saveAddObs('${e.id}')">Save</button>
+            <button class="btn-outline" onclick="toggleAddObs('${e.id}')">Cancel</button>
+          </div>
+        </div>
+      </div>
+      ${draftHtml}
+    </div>`;
+  }).join('');
+}
+
+const addObsImages={};
+function handleAddObsImages(e,entryId){
+  if(!addObsImages[entryId]) addObsImages[entryId]=[];
+  Array.from(e.target.files).forEach(f=>{
+    const r=new FileReader();
+    r.onload=ev=>{addObsImages[entryId].push(ev.target.result);renderAddObsPreviews(entryId);};
+    r.readAsDataURL(f);
+  });
+}
+function renderAddObsPreviews(id){
+  const wrap=document.getElementById('ao-preview-'+id);
+  if(!wrap) return;
+  wrap.innerHTML=(addObsImages[id]||[]).map((src,i)=>`<div class="img-thumb-wrap"><img class="img-thumb" src="${src}"><button class="img-thumb-del" onclick="removeAddObsImg('${id}',${i})">×</button></div>`).join('');
+}
+function removeAddObsImg(id,i){addObsImages[id].splice(i,1);renderAddObsPreviews(id);}
+
+function toggleEntryObs(id){
+  const obs=document.getElementById('obs-'+id);
+  const chev=document.getElementById('chevron-'+id);
+  const open=obs.style.display==='none';
+  obs.style.display=open?'block':'none';
+  chev.className='ti '+(open?'ti-chevron-up':'ti-chevron-down');
+}
+
+function toggleAddObs(id){
+  const form=document.getElementById('addobs-'+id);
+  form.classList.toggle('open');
+}
+
+function saveAddObs(id){
+  const obs={
+    date:document.getElementById('ao-date-'+id).value,
+    location:document.getElementById('ao-loc-'+id).value.trim(),
+    notes:document.getElementById('ao-notes-'+id).value.trim(),
+    images:[...(addObsImages[id]||[])]
+  };
+  const entry=entries.find(e=>e.id===id);
+  if(entry){entry.observations.unshift(obs);}
+  delete addObsImages[id];
+  try{localStorage.setItem('gg_entries',JSON.stringify(entries));}catch(e){}
+  renderEntries();
+}
+
+// lightbox
+function openLightbox(src){
+  document.getElementById('lightboxImg').src=src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+
+// ── TRAIL COMPANIONS ──
+const COMPANIONS=[
+  {emoji:'🐈‍⬛',name:'the black cat',end:'The cat has reached the end of the trail.',body:'She sits and blinks slowly. You are seen.'},
+  {emoji:'🐸',name:'the toad',end:'The toad has hopped to the forest\'s edge.',body:'He found a mushroom ring. A good omen.'},
+  {emoji:'🦅',name:'the raven',end:'The raven has reached the old oak.',body:'She calls once. The forest answers.'},
+  {emoji:'🦊',name:'the fox',end:'The fox has vanished into the undergrowth.',body:'Only a flash of amber between the ferns.'},
+  {emoji:'🦋',name:'the moth',end:'The moth has reached the moon.',body:'She rests a moment, wings still.'},
+];
+let companionIdx=0;
+try{const s=localStorage.getItem('gg_companion');if(s)companionIdx=parseInt(s)||0;}catch(e){}
+
+function currentCompanion(){return COMPANIONS[companionIdx%COMPANIONS.length];}
+
+function nextCompanion(){
+  companionIdx=(companionIdx+1)%COMPANIONS.length;
+  try{localStorage.setItem('gg_companion',companionIdx);}catch(e){}
+  points=0;
+  try{localStorage.setItem('gg_points',0);}catch(e){}
+  document.getElementById('companionSplash').classList.remove('open');
+  updateTrail();
+}
+
+// ── PLANT PHOTOS (user-uploaded, persisted) ──
+let plantPhotos={};
+try{const s=localStorage.getItem('gg_plantphotos');if(s)plantPhotos=JSON.parse(s);}catch(e){}
+
+function savePlantPhoto(id,dataUrl){
+  plantPhotos[id]=dataUrl;
+  try{localStorage.setItem('gg_plantphotos',JSON.stringify(plantPhotos));}catch(e){}
+}
+
+function getPlantPhoto(p){
+  return plantPhotos[p.id]||p.photo||null;
+}
+
+// merged pool used by library + games
+function allPlants(){return [...PLANTS,...customPlants];}
+
+function saveCustomPlants(){
+  try{localStorage.setItem('gg_custom',JSON.stringify(customPlants));}catch(e){}
+}
+// ── TRAIL ──
+const LEVELS=[{name:'Seedling',min:0},{name:'Sprout',min:50},{name:'Herb',min:150},{name:'Forager',min:300},{name:'Herbalist',min:500}];
+function getLevelName(pts){let l=LEVELS[0];for(const lv of LEVELS) if(pts>=lv.min) l=lv;return l.name;}
+function getLevelPct(pts){const max=600;return Math.min(100,pts/max*100);}
+
+function addPoints(n){
+  const wasComplete=points>=600;
+  points+=n;
+  try{localStorage.setItem('gg_points',points);}catch(e){}
+  updateTrail();
+  flashPoints('+'+n+' pt'+(n!==1?'s':''));
+  if(!wasComplete&&points>=600) showCompletionSplash();
+}
+
+function showCompletionSplash(){
+  const c=currentCompanion();
+  document.getElementById('splashCreature').textContent=c.emoji;
+  document.getElementById('splashTitle').textContent=c.end;
+  document.getElementById('splashBody').textContent=c.body;
+  document.getElementById('companionSplash').classList.add('open');
+}
+
+function flashPoints(msg){
+  const el=document.getElementById('ptFlash');
+  el.textContent=msg;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),1500);
+}
+
+function updateTrail(){
+  const c=currentCompanion();
+  document.getElementById('trailScore').textContent=points+' pts';
+  document.getElementById('trailLevel').textContent=getLevelName(points);
+  const pct=getLevelPct(points);
+  document.getElementById('trailFill').style.width=pct+'%';
+  document.getElementById('trailCat').style.left='calc('+pct+'% - 12px)';
+  document.getElementById('trailCat').textContent=c.emoji;
+}
+
+function selectGame(name,tile){
+  currentGame=name;
+  document.querySelectorAll('.game-tile').forEach(t=>t.classList.remove('active'));
+  tile.classList.add('active');
+  renderGame();
+}
+
+function renderGame(){
+  if(currentGame==='flashcard') renderFlashcard();
+  else if(currentGame==='match') renderMatch();
+  else if(currentGame==='tags') renderTagGame();
+}
+
+// FLASHCARD
+function renderFlashcard(){
+  flashPool=[...allPlants()].sort(()=>Math.random()-.5);
+  flashIdx=0; flashFlipped=false;
+  showFlashcard();
+}
+
+function showFlashcard(){
+  const p=flashPool[flashIdx];
+  const photo=getPlantPhoto(p);
+  const area=document.getElementById('gameArea');
+  area.innerHTML=`
+    <div class="game-prompt">Click the card to reveal</div>
+    <div class="flashcard-wrap" onclick="flipCard()">
+      <div class="flashcard" id="flashcard">
+        <div class="fc-face fc-front">
+          ${photo?`<img class="fc-img" src="${photo}" alt="${p.common}" onerror="this.style.display='none'">`:'<div style="font-size:52px;margin-bottom:.75rem">'+p.sigil+'</div>'}
+          <div class="fc-hint">What plant is this?</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-back-content">
+            <div class="fc-name">${p.common}</div>
+            <div class="fc-latin">${p.latin}</div>
+            <div class="fc-property" style="margin-top:.75rem">${p.identify.split('.')[0]}.</div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.6rem">${p.tags.map(t=>`<span class="tile-tag tile-tag-${t}">${t}</span>`).join('')}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-actions" id="fcActions" style="display:none">
+      <button class="btn-sm btn-sm-ghost" onclick="nextFlash(false)">Still learning</button>
+      <button class="btn-sm btn-sm-moss" onclick="nextFlash(true)">Got it! +2 pts</button>
+    </div>
+    <div style="text-align:center;margin-top:.75rem;font-size:13px;color:var(--fog);font-style:italic">${flashIdx+1} of ${flashPool.length}</div>`;
+}
+
+function flipCard(){
+  if(flashFlipped) return;
+  flashFlipped=true;
+  document.getElementById('flashcard').classList.add('flipped');
+  document.getElementById('fcActions').style.display='flex';
+}
+
+function nextFlash(correct){
+  if(correct) addPoints(2);
+  flashIdx=(flashIdx+1)%flashPool.length;
+  flashFlipped=false;
+  showFlashcard();
+}
+
+// MATCH GAME
+function renderMatch(){
+  const pool=[...allPlants()].sort(()=>Math.random()-.5).slice(0,4);
+  const target=pool[Math.floor(Math.random()*pool.length)];
+  const area=document.getElementById('gameArea');
+  area.innerHTML=`
+    <div class="game-prompt">Which plant is this?</div>
+    ${target.photo?`<img class="game-img" src="${target.photo}" alt="" onerror="this.style.display='none'">`:'<div style="text-align:center;font-size:64px;margin-bottom:1rem">'+target.sigil+'</div>'}
+    <div class="game-options">
+      ${pool.map(p=>`<button class="game-opt" onclick="checkMatch(this,'${p.id}','${target.id}')">${p.common}</button>`).join('')}
+    </div>`;
+}
+
+function checkMatch(btn,chosen,correct){
+  const area=document.getElementById('gameArea');
+  area.querySelectorAll('.game-opt').forEach(b=>{
+    b.disabled=true;
+    const id=b.getAttribute('onclick').match(/'([^']+)'/)[1];
+    if(id===correct) b.classList.add('correct');
+    else if(b===btn&&id!==correct) b.classList.add('wrong');
+  });
+  if(chosen===correct){
+    addPoints(3);
+    setTimeout(()=>renderMatch(),1800);
+  } else {
+    setTimeout(()=>renderMatch(),2200);
+  }
+}
+
+// TAG GAME
+function renderTagGame(){
+  const pool=allPlants();
+  tagPlant=pool[Math.floor(Math.random()*pool.length)];
+  tagSelected=new Set(); tagSubmitted=false;
+  const photo=getPlantPhoto(tagPlant);
+  const area=document.getElementById('gameArea');
+  area.innerHTML=`
+    <div class="tag-game-plant">
+      <div class="tag-game-name">${tagPlant.common}</div>
+      <div style="font-size:13px;font-style:italic;color:var(--fog)">${tagPlant.latin}</div>
+      ${photo?`<img class="tag-game-img" src="${photo}" alt="${tagPlant.common}" onerror="this.style.display='none'">`:'<div style="font-size:52px;margin:1rem 0">'+tagPlant.sigil+'</div>'}
+    </div>
+    <div style="text-align:center;font-size:14.5px;color:var(--fog);font-style:italic;margin-bottom:.75rem">Select all properties that apply:</div>
+    <div class="tag-grid" id="tagGrid">
+      ${ALL_TAGS.map(t=>`<div class="tag-chip" id="chip-${t}" onclick="toggleTag('${t}')">${t}</div>`).join('')}
+    </div>
+    <div class="tag-feedback" id="tagFeedback"></div>
+    <div style="text-align:center">
+      <button class="btn-sm btn-sm-moss" id="tagSubmitBtn" onclick="submitTags()">Check my answer</button>
+    </div>`;
+}
+
+function toggleTag(t){
+  if(tagSubmitted) return;
+  if(tagSelected.has(t)) tagSelected.delete(t);
+  else tagSelected.add(t);
+  document.getElementById('chip-'+t).classList.toggle('selected',tagSelected.has(t));
+}
+
+function submitTags(){
+  if(tagSubmitted) return;
+  tagSubmitted=true;
+  const correct=new Set(tagPlant.tags);
+  // also add 'deciduous' if tree and not fern, 'evergreen' if fern, 'native' for all our plants, 'aromatic' for certain ones
+  const aromatic=['spicebush','sassafras','wild_bergamot','ramps'];
+  if(aromatic.includes(tagPlant.id)) correct.add('aromatic');
+  if(tagPlant.tags.includes('fern')) correct.add('evergreen');
+  else if(tagPlant.tags.includes('tree')||tagPlant.tags.includes('shrub')||tagPlant.tags.includes('wildflower')||tagPlant.tags.includes('vine')) correct.add('deciduous');
+  correct.add('native');
+
+  let earned=0, correctCount=0, wrongCount=0;
+  ALL_TAGS.forEach(t=>{
+    const chip=document.getElementById('chip-'+t);
+    chip.classList.add('locked');
+    const isCorrect=correct.has(t);
+    const wasSelected=tagSelected.has(t);
+    if(isCorrect&&wasSelected){chip.classList.remove('selected');chip.classList.add('correct-yes');correctCount++;}
+    else if(isCorrect&&!wasSelected){chip.classList.add('wrong-no');}
+    else if(!isCorrect&&wasSelected){chip.classList.remove('selected');chip.classList.add('wrong-yes');wrongCount++;}
+    else{chip.classList.add('correct-no');}
+  });
+  earned=Math.max(0,correctCount-wrongCount);
+  if(earned>0) addPoints(earned);
+  const fb=document.getElementById('tagFeedback');
+  fb.textContent=earned>0?`Nice! +${earned} pts — ${correctCount} correct, ${wrongCount} wrong`:`${correctCount} correct, ${wrongCount} wrong — try again!`;
+  fb.style.color=earned>0?'var(--moss)':'var(--rust)';
+  document.getElementById('tagSubmitBtn').textContent='Next plant →';
+  document.getElementById('tagSubmitBtn').onclick=renderTagGame;
+}
+
+// ── INIT ──
+buildBookshelf();
+renderEntries();
+updateTrail();
+renderGame();
+</script>
+</body>
+</html>
